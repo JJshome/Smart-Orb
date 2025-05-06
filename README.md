@@ -58,7 +58,7 @@ docker-compose up -d
 This method ensures all dependencies are properly installed and isolated.
 
 <p align="center">
-  <img src="https://github.com/JJshome/Smart-Orb/assets/107289883/1a2a3456-0f8b-4c78-8d99-30d61c5e6de7" alt="Smart Orb Dashboard" width="700">
+  <img src="./docs/images/dashboard_preview.png" alt="Smart Orb Dashboard" width="700">
 </p>
 
 ## Key Features
@@ -168,7 +168,7 @@ This will run three different exercise simulations and generate visualization pl
 ## How It Works
 
 <p align="center">
-  <img src="https://github.com/JJshome/Smart-Orb/assets/107289883/1a2a3456-0f8b-4c78-8d99-30d61c5e6de7" alt="Smart Orb Functionality" width="700">
+  <img src="./docs/images/smart_orb_functionality.png" alt="Smart Orb Functionality" width="700">
 </p>
 
 1. The user holds the Smart Orb in their hand while wearing the wireless sensor/stimulation unit on the target body area
@@ -241,8 +241,6 @@ The Smart Orb technology is developed and owned by Ucaretron Inc., a company spe
 
 - **Software Code**: The software code in this repository is released under the MIT License, allowing for modification, distribution, and use in both private and commercial software projects.
 - **Core Technology**: The underlying technology, methodologies, processes, and hardware designs described in this repository are proprietary to Ucaretron Inc. and protected by pending patent applications. Commercial use of these aspects requires explicit permission from Ucaretron Inc.
-
-For licensing inquiries or commercial use permissions, please contact: licensing@ucaretron.com
 
 ## Contributing
 
