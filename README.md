@@ -58,7 +58,7 @@ docker-compose up -d
 This method ensures all dependencies are properly installed and isolated.
 
 <p align="center">
-  <img src="./docs/images/dashboard_preview.png" alt="Smart Orb Dashboard" width="700">
+  <img src="./docs/images/smart_orb_dashboard.svg" alt="Smart Orb Dashboard" width="700">
 </p>
 
 ## Key Features
