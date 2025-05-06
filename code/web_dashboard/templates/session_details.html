@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Details - Smart Orb Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .card-hover:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .card {
+            transition: all 0.3s ease;
+        }
+        .session-header {
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 40px;
+        }
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+        }
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .stat-card .label {
+            font-size: 1rem;
+            color: #6c757d;
+        }
+        .phase-indicator {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .phase-warmup {
+            background-color: #3498db;
+        }
+        .phase-main {
+            background-color: #2ecc71;
+        }
+        .phase-peak {
+            background-color: #e74c3c;
+        }
+        .phase-cooldown {
+            background-color: #9b59b6;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-circle text-primary me-2"></i>
+                Smart Orb
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/device_control">Device Control</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            Users
+                        </a>
+                        <ul class="dropdown-menu">
+                            {% for id, data in {'user1': {'name': 'Alex Kim'}, 'user2': {'name': 'Jamie Chen'}, 'user3': {'name': 'Taylor Smith'}}.items() %}
+                            <li><a class="dropdown-item {% if id == user_id %}active{% endif %}" href="/user/{{ id }}">{{ data.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="session-header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-1">Session Details</h2>
+                    <p class="lead mb-0">{{ session.date }} | {{ user.name }}</p>
+                </div>
+                <a href="/user/{{ user_id }}" class="btn btn-light">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Profile
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 stat-card card-hover bg-primary text-white">
+                    <div class="card-body">
+                        <div class="number">{{ session.duration }}</div>
+                        <div class="label text-white">Minutes</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 stat-card card-hover bg-success text-white">
+                    <div class="card-body">
+                        <div class="number">{{ session.calories }}</div>
+                        <div class="label text-white">Calories</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 stat-card card-hover bg-warning text-dark">
+                    <div class="card-body">
+                        <div class="number">{{ session.avg_heart_rate }}</div>
+                        <div class="label">Avg HR (BPM)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 stat-card card-hover bg-info text-white">
+                    <div class="card-body">
+                        <div class="number">{{ session.effectiveness }}%</div>
+                        <div class="label text-white">Effectiveness</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-8 mb-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Heart Rate & TENS Parameters</h5>
+                        <div>
+                            <span class="me-3"><span class="phase-indicator phase-warmup"></span>Warmup</span>
+                            <span class="me-3"><span class="phase-indicator phase-main"></span>Main</span>
+                            <span class="me-3"><span class="phase-indicator phase-peak"></span>Peak</span>
+                            <span><span class="phase-indicator phase-cooldown"></span>Cooldown</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="heartRateChart" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Heart Rate Zones</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="heartRateZoneChart" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">TENS Parameters</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="tensParamsChart" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">EMG Activity</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="emgChart" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Session Analysis</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Exercise Type</h6>
+                                <p><span class="badge bg-info">{{ exercise_type.name }}</span></p>
+                                <p>{{ exercise_type.description }}</p>
+                                
+                                <h6 class="mt-4">Performance Assessment</h6>
+                                <div class="progress mb-3" style="height: 25px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ session.effectiveness }}%">
+                                        {{ session.effectiveness }}% Effectiveness
+                                    </div>
+                                </div>
+                                
+                                <p>{{ session.user_name }}'s performance in this {{ exercise_type.name }} session showed 
+                                {% if session.effectiveness > 90 %}excellent{% elif session.effectiveness > 80 %}very good{% elif session.effectiveness > 70 %}good{% else %}moderate{% endif %} 
+                                results with adaptive TENS parameters appropriately adjusted to maximize workout efficiency.</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Key Metrics</h6>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Maximum Heart Rate
+                                        <span>{{ session.max_heart_rate }} BPM</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Average Heart Rate
+                                        <span>{{ session.avg_heart_rate }} BPM</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Time in Peak Zone
+                                        <span>{{ session.hr_zone_minutes.peak }} min</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Time in Cardio Zone
+                                        <span>{{ session.hr_zone_minutes.cardio }} min</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Time in Fat Burn Zone
+                                        <span>{{ session.hr_zone_minutes.fat_burn }} min</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Time in Easy Zone
+                                        <span>{{ session.hr_zone_minutes.easy }} min</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Smart Orb Configuration</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>TENS Stimulation</h6>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Peak Frequency
+                                        <span>{{ session.tens_frequency|max }} Hz</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Average Frequency
+                                        <span>{{ (session.tens_frequency|sum / session.tens_frequency|length)|round(1) }} Hz</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Maximum Intensity
+                                        <span>{{ session.tens_intensity|max }}%</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Average Pulse Width
+                                        <span>{{ (session.tens_pulse_width|sum / session.tens_pulse_width|length)|round(1) }} μs</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Multi-Sensory Feedback</h6>
+                                <p>During this session, the Smart Orb provided coordinated multi-sensory feedback that was synchronized with exercise phases:</p>
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Phase</th>
+                                                <th>Visual</th>
+                                                <th>Audio</th>
+                                                <th>Haptic</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><span class="phase-indicator phase-warmup"></span>Warmup</td>
+                                                <td>Blue, slow pulse</td>
+                                                <td>Alpha binaural</td>
+                                                <td>Gentle rhythm</td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="phase-indicator phase-main"></span>Main</td>
+                                                <td>Green, steady</td>
+                                                <td>Beta binaural</td>
+                                                <td>Continuous</td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="phase-indicator phase-peak"></span>Peak</td>
+                                                <td>Red, fast pulse</td>
+                                                <td>High beta</td>
+                                                <td>Intense pulse</td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="phase-indicator phase-cooldown"></span>Cooldown</td>
+                                                <td>Purple, wave</td>
+                                                <td>Alpha/theta</td>
+                                                <td>Gentle wave</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between mb-5">
+            <a href="/user/{{ user_id }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Profile
+            </a>
+            <a href="#" class="btn btn-primary">
+                <i class="fas fa-download me-2"></i>Export Session Data
+            </a>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2024 Ucaretron Inc. All rights reserved.</p>
+                    <p>Patent Pending (KR10-2024-0071235)</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Heart Rate & TENS Chart
+        const heartRateCtx = document.getElementById('heartRateChart').getContext('2d');
+        const heartRateChart = new Chart(heartRateCtx, {
+            type: 'line',
+            data: {
+                labels: Array.from({length: {{ session.heart_rate|length }}}, (_, i) => i),
+                datasets: [
+                    {
+                        label: 'Heart Rate (BPM)',
+                        data: {{ session.heart_rate }},
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'TENS Frequency (Hz)',
+                        data: {{ session.tens_frequency }},
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.3,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time (minutes)'
+                        }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Heart Rate (BPM)'
+                        },
+                        min: {{ (user.resting_heart_rate - 10)|round|int }},
+                        max: {{ (user.max_heart_rate + 10)|round|int }}
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'TENS Frequency (Hz)'
+                        },
+                        min: 0,
+                        max: 100,
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Heart Rate Zone Chart
+        const hrZoneCtx = document.getElementById('heartRateZoneChart').getContext('2d');
+        const hrZoneChart = new Chart(hrZoneCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Easy', 'Fat Burn', 'Cardio', 'Peak'],
+                datasets: [{
+                    data: [
+                        {{ session.hr_zone_minutes.easy }},
+                        {{ session.hr_zone_minutes.fat_burn }},
+                        {{ session.hr_zone_minutes.cardio }},
+                        {{ session.hr_zone_minutes.peak }}
+                    ],
+                    backgroundColor: [
+                        '#3498db',
+                        '#2ecc71',
+                        '#f39c12',
+                        '#e74c3c'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                let value = context.raw || 0;
+                                return `${label}: ${value} minutes`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // TENS Parameters Chart
+        const tensParamsCtx = document.getElementById('tensParamsChart').getContext('2d');
+        const tensParamsChart = new Chart(tensParamsCtx, {
+            type: 'line',
+            data: {
+                labels: Array.from({length: {{ session.tens_intensity|length }}}, (_, i) => i),
+                datasets: [
+                    {
+                        label: 'Intensity (%)',
+                        data: {{ session.tens_intensity }},
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Pulse Width (μs)',
+                        data: {{ session.tens_pulse_width }},
+                        borderColor: '#9b59b6',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.3,
+                        hidden: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time (minutes)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Value'
+                        }
+                    }
+                }
+            }
+        });
+
+        // EMG Chart
+        const emgCtx = document.getElementById('emgChart').getContext('2d');
+        const emgChart = new Chart(emgCtx, {
+            type: 'line',
+            data: {
+                labels: Array.from({length: {{ session.emg|length }}}, (_, i) => i),
+                datasets: [{
+                    label: 'EMG Activity',
+                    data: {{ session.emg }},
+                    borderColor: '#2ecc71',
+                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time (minutes)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'EMG Activity'
+                        },
+                        min: 0,
+                        max: 100
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
