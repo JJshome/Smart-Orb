@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Control - Smart Orb Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .card-hover:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .card {
+            transition: all 0.3s ease;
+        }
+        .control-header {
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 40px;
+        }
+        .orb-visualization {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .orb-outer {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: pulse 2s infinite;
+        }
+        .orb-middle {
+            width: 160px;
+            height: 160px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        .orb-inner {
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            position: absolute;
+            top: 40px;
+            left: 40px;
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 198, 255, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(0, 198, 255, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 198, 255, 0);
+            }
+        }
+        .sensor-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            position: absolute;
+            animation: blink 2s infinite;
+        }
+        .sensor-dot.top {
+            top: 10px;
+            left: 92px;
+            background-color: #e74c3c;
+        }
+        .sensor-dot.right {
+            top: 92px;
+            right: 10px;
+            background-color: #2ecc71;
+        }
+        .sensor-dot.bottom {
+            bottom: 10px;
+            left: 92px;
+            background-color: #f39c12;
+        }
+        .sensor-dot.left {
+            top: 92px;
+            left: 10px;
+            background-color: #9b59b6;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .control-slider {
+            margin-bottom: 25px;
+        }
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .status-indicator {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .status-connected {
+            background-color: #2ecc71;
+        }
+        .status-disconnected {
+            background-color: #e74c3c;
+        }
+        .color-preview {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            display: inline-block;
+            vertical-align: middle;
+            border: 1px solid #ddd;
+        }
+        .mode-card {
+            cursor: pointer;
+        }
+        .mode-card.active {
+            border: 2px solid #0072ff;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-circle text-primary me-2"></i>
+                Smart Orb
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/device_control">Device Control</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            Users
+                        </a>
+                        <ul class="dropdown-menu">
+                            {% for user_id, user_data in users.items() %}
+                            <li><a class="dropdown-item" href="/user/{{ user_id }}">{{ user_data.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="control-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <h1 class="display-5 fw-bold mb-3">Device Control</h1>
+                    <p class="lead">Real-time control and monitoring of your Smart Orb</p>
+                    <div class="d-flex align-items-center mt-4">
+                        <span class="status-indicator status-connected" id="connectionStatus"></span>
+                        <span class="me-3" id="connectionText">Connected</span>
+                        <span class="badge bg-light text-dark" id="batteryLevel">Battery: 85%</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="orb-visualization">
+                        <div class="orb-outer"></div>
+                        <div class="orb-middle"></div>
+                        <div class="orb-inner"></div>
+                        <div class="sensor-dot top"></div>
+                        <div class="sensor-dot right"></div>
+                        <div class="sensor-dot bottom"></div>
+                        <div class="sensor-dot left"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Device Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush" id="deviceInfoList">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Status
+                                <span><span class="status-indicator status-connected"></span> Connected</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Battery Level
+                                <span>85%</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Firmware Version
+                                <span>v2.3.1</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Signal Strength
+                                <span>92%</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Temperature
+                                <span>36.8°C</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Last Synced
+                                <span>10 minutes ago</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-outline-primary" id="refreshButton">
+                            <i class="fas fa-sync-alt me-2"></i>Refresh
+                        </button>
+                        <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#firmwareModal">
+                            <i class="fas fa-microchip me-2"></i>Firmware
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-8 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Exercise Mode</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Select an exercise mode to configure the Smart Orb:</p>
+                        
+                        <div class="row g-3 mb-4">
+                            {% for type_id, type_data in exercise_types.items() %}
+                            <div class="col-md-4">
+                                <div class="card h-100 mode-card {% if loop.first %}active{% endif %}" data-mode="{{ type_id }}">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">{{ type_data.name }}</h5>
+                                        <p class="card-text small">{{ type_data.description }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="user-select mb-4">
+                            <label for="userSelect" class="form-label">User Profile</label>
+                            <select class="form-select" id="userSelect">
+                                {% for user_id, user_data in users.items() %}
+                                <option value="{{ user_id }}">{{ user_data.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div id="modeDescription">
+                            <h6>TENS Profile</h6>
+                            <p id="tensProfileText">High intensity pulses (80-100Hz) during contraction phases.</p>
+                            
+                            <h6 class="mt-3">Sensory Profile</h6>
+                            <p id="sensoryProfileText">Red visual cues, rhythmic audio patterns, strong haptic feedback.</p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary" id="startSessionButton">
+                            <i class="fas fa-play me-2"></i>Start Session
+                        </button>
+                        <button class="btn btn-outline-secondary" id="savePresetButton">
+                            <i class="fas fa-save me-2"></i>Save Preset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">TENS Parameters</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="control-slider">
+                            <div class="slider-label">
+                                <span>Frequency (Hz)</span>
+                                <span id="frequencyValue">50</span>
+                            </div>
+                            <input type="range" class="form-range" min="1" max="100" value="50" id="frequencySlider">
+                        </div>
+                        
+                        <div class="control-slider">
+                            <div class="slider-label">
+                                <span>Pulse Width (μs)</span>
+                                <span id="pulseWidthValue">200</span>
+                            </div>
+                            <input type="range" class="form-range" min="50" max="350" value="200" id="pulseWidthSlider">
+                        </div>
+                        
+                        <div class="control-slider">
+                            <div class="slider-label">
+                                <span>Intensity (%)</span>
+                                <span id="intensityValue">60</span>
+                            </div>
+                            <input type="range" class="form-range" min="0" max="100" value="60" id="intensitySlider">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="patternSelect" class="form-label">Stimulation Pattern</label>
+                            <select class="form-select" id="patternSelect">
+                                <option value="continuous">Continuous</option>
+                                <option value="burst">Burst</option>
+                                <option value="modulated">Modulated</option>
+                                <option value="wave">Wave</option>
+                                <option value="rhythmic">Rhythmic</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Multi-Sensory Feedback</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Visual</h6>
+                                <div class="mb-3">
+                                    <label for="colorPicker" class="form-label">Color</label>
+                                    <div>
+                                        <input type="color" class="form-control form-control-color" id="colorPicker" value="#0072ff">
+                                        <div class="color-preview" style="background-color: #0072ff;" id="colorPreview"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="control-slider">
+                                    <div class="slider-label">
+                                        <span>Brightness</span>
+                                        <span id="brightnessValue">70%</span>
+                                    </div>
+                                    <input type="range" class="form-range" min="0" max="100" value="70" id="brightnessSlider">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="visualPatternSelect" class="form-label">Pattern</label>
+                                    <select class="form-select" id="visualPatternSelect">
+                                        <option value="steady">Steady</option>
+                                        <option value="pulse">Pulse</option>
+                                        <option value="breathe">Breathe</option>
+                                        <option value="wave">Wave</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h6>Audio</h6>
+                                <div class="mb-3">
+                                    <label for="audioSelect" class="form-label">Sound Type</label>
+                                    <select class="form-select" id="audioSelect">
+                                        <option value="nature">Nature Sounds</option>
+                                        <option value="binaural">Binaural Beats</option>
+                                        <option value="white">White Noise</option>
+                                        <option value="rhythm">Rhythmic</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="control-slider">
+                                    <div class="slider-label">
+                                        <span>Volume</span>
+                                        <span id="volumeValue">50%</span>
+                                    </div>
+                                    <input type="range" class="form-range" min="0" max="100" value="50" id="volumeSlider">
+                                </div>
+                                
+                                <div class="control-slider">
+                                    <div class="slider-label">
+                                        <span>Frequency (Hz)</span>
+                                        <span id="audioFrequencyValue">10</span>
+                                    </div>
+                                    <input type="range" class="form-range" min="1" max="20" value="10" id="audioFrequencySlider">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Haptic</h6>
+                                <div class="control-slider">
+                                    <div class="slider-label">
+                                        <span>Intensity</span>
+                                        <span id="hapticIntensityValue">65%</span>
+                                    </div>
+                                    <input type="range" class="form-range" min="0" max="100" value="65" id="hapticIntensitySlider">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="hapticPatternSelect" class="form-label">Pattern</label>
+                                    <select class="form-select" id="hapticPatternSelect">
+                                        <option value="continuous">Continuous</option>
+                                        <option value="pulse">Pulse</option>
+                                        <option value="rhythm">Rhythmic</option>
+                                        <option value="wave">Wave</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h6>Thermal</h6>
+                                <div class="control-slider">
+                                    <div class="slider-label">
+                                        <span>Temperature (°C)</span>
+                                        <span id="temperatureValue">32</span>
+                                    </div>
+                                    <input type="range" class="form-range" min="25" max="37" value="32" id="temperatureSlider">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="thermalPatternSelect" class="form-label">Pattern</label>
+                                    <select class="form-select" id="thermalPatternSelect">
+                                        <option value="constant">Constant</option>
+                                        <option value="wave">Wave</option>
+                                        <option value="pulse">Pulse</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Device Console</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="bg-dark text-light p-3 rounded" style="height: 200px; overflow-y: auto;" id="consoleOutput">
+                            <div class="log-entry">[System] Device connected</div>
+                            <div class="log-entry">[System] Firmware v2.3.1 detected</div>
+                            <div class="log-entry">[System] Battery level: 85%</div>
+                            <div class="log-entry">[System] All sensors operational</div>
+                            <div class="log-entry">[System] Ready for operation</div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex">
+                        <input type="text" class="form-control me-2" placeholder="Enter command..." id="commandInput">
+                        <button class="btn btn-primary" id="sendCommandButton">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <button class="btn btn-warning" id="resetButton">
+                    <i class="fas fa-undo me-2"></i>Reset to Defaults
+                </button>
+            </div>
+            <div class="col-md-6 text-end">
+                <button class="btn btn-danger" id="powerButton">
+                    <i class="fas fa-power-off me-2"></i>Power Off
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firmware Update Modal -->
+    <div class="modal fade" id="firmwareModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Firmware Update</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Current firmware version: <strong>v2.3.1</strong></p>
+                    <p>Latest available version: <strong>v2.4.0</strong></p>
+                    <p>Update changes:</p>
+                    <ul>
+                        <li>Improved battery efficiency</li>
+                        <li>Enhanced TENS wave patterns</li>
+                        <li>Fixed EMG sensor calibration issues</li>
+                        <li>Added new audio patterns</li>
+                    </ul>
+                    <div class="progress mb-3" style="height: 25px; display: none;" id="updateProgress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%">0%</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="updateFirmwareButton">Update Firmware</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2024 Ucaretron Inc. All rights reserved.</p>
+                    <p>Patent Pending (KR10-2024-0071235)</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize sliders and update values
+            document.querySelectorAll('input[type="range"]').forEach(slider => {
+                const valueDisplay = document.getElementById(slider.id.replace('Slider', 'Value'));
+                if (valueDisplay) {
+                    slider.addEventListener('input', function() {
+                        let value = this.value;
+                        if (slider.id.includes('Intensity') || slider.id.includes('Volume') || slider.id.includes('brightness')) {
+                            value += '%';
+                        }
+                        valueDisplay.textContent = value;
+                        updateOrbVisualization();
+                    });
+                }
+            });
+
+            // Color picker
+            const colorPicker = document.getElementById('colorPicker');
+            const colorPreview = document.getElementById('colorPreview');
+            
+            colorPicker.addEventListener('input', function() {
+                colorPreview.style.backgroundColor = this.value;
+                updateOrbVisualization();
+            });
+
+            // Exercise mode selection
+            const modeCards = document.querySelectorAll('.mode-card');
+            const tensProfileText = document.getElementById('tensProfileText');
+            const sensoryProfileText = document.getElementById('sensoryProfileText');
+            
+            modeCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Remove active class from all cards
+                    modeCards.forEach(c => c.classList.remove('active'));
+                    // Add active class to clicked card
+                    this.classList.add('active');
+                    
+                    // Update profile texts based on selected mode
+                    const mode = this.dataset.mode;
+                    switch(mode) {
+                        case 'strength':
+                            tensProfileText.textContent = 'High intensity pulses (80-100Hz) during contraction phases.';
+                            sensoryProfileText.textContent = 'Red visual cues, rhythmic audio patterns, strong haptic feedback.';
+                            break;
+                        case 'cardio':
+                            tensProfileText.textContent = 'Medium frequency continuous stimulation (30-50Hz).';
+                            sensoryProfileText.textContent = 'Blue/green visuals, steady beat audio, moderate pulsed haptics.';
+                            break;
+                        case 'flexibility':
+                            tensProfileText.textContent = 'Low frequency (2-10Hz) during stretching to relax muscles.';
+                            sensoryProfileText.textContent = 'Purple/blue visuals, ambient soundscapes, gentle haptics.';
+                            break;
+                        case 'rehab':
+                            tensProfileText.textContent = 'Alternating frequencies (10-40Hz) with adaptive intensity.';
+                            sensoryProfileText.textContent = 'Green visuals, calming audio, precise localized haptics.';
+                            break;
+                        case 'hiit':
+                            tensProfileText.textContent = 'Alternating high (80-100Hz) and low (20-30Hz) frequencies.';
+                            sensoryProfileText.textContent = 'Red/orange during work intervals, blue during recovery, dynamic audio.';
+                            break;
+                    }
+                    
+                    // Update slider values based on selected mode
+                    updateParametersForMode(mode);
+                });
+            });
+
+            // Get device status
+            function getDeviceStatus() {
+                // Simulate API call
+                fetch('/api/device/status')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('connectionStatus').className = data.connected ? 
+                            'status-indicator status-connected' : 'status-indicator status-disconnected';
+                        document.getElementById('connectionText').textContent = data.connected ? 'Connected' : 'Disconnected';
+                        document.getElementById('batteryLevel').textContent = `Battery: ${data.battery_level}%`;
+                        
+                        // Update device info list
+                        const infoList = document.getElementById('deviceInfoList');
+                        infoList.innerHTML = `
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Status
+                                <span><span class="status-indicator ${data.connected ? 'status-connected' : 'status-disconnected'}"></span> 
+                                ${data.connected ? 'Connected' : 'Disconnected'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Battery Level
+                                <span>${data.battery_level}%</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Firmware Version
+                                <span>${data.firmware_version}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Signal Strength
+                                <span>${data.signal_strength}%</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Temperature
+                                <span>${data.temperature}°C</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Last Synced
+                                <span>${data.last_sync}</span>
+                            </li>
+                        `;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching device status:', error);
+                        addConsoleMessage('[Error] Failed to fetch device status', true);
+                    });
+            }
+
+            // Update parameters for selected mode
+            function updateParametersForMode(mode) {
+                let frequency, pulseWidth, intensity, pattern, color, brightness;
+                
+                switch(mode) {
+                    case 'strength':
+                        frequency = 85;
+                        pulseWidth = 250;
+                        intensity = 75;
+                        pattern = 'burst';
+                        color = '#e74c3c'; // Red
+                        brightness = 80;
+                        break;
+                    case 'cardio':
+                        frequency = 40;
+                        pulseWidth = 200;
+                        intensity = 60;
+                        pattern = 'continuous';
+                        color = '#3498db'; // Blue
+                        brightness = 70;
+                        break;
+                    case 'flexibility':
+                        frequency = 8;
+                        pulseWidth = 300;
+                        intensity = 45;
+                        pattern = 'wave';
+                        color = '#9b59b6'; // Purple
+                        brightness = 60;
+                        break;
+                    case 'rehab':
+                        frequency = 25;
+                        pulseWidth = 250;
+                        intensity = 40;
+                        pattern = 'modulated';
+                        color = '#2ecc71'; // Green
+                        brightness = 65;
+                        break;
+                    case 'hiit':
+                        frequency = 90;
+                        pulseWidth = 200;
+                        intensity = 80;
+                        pattern = 'burst';
+                        color = '#e67e22'; // Orange
+                        brightness = 85;
+                        break;
+                }
+                
+                // Update TENS parameters
+                document.getElementById('frequencySlider').value = frequency;
+                document.getElementById('frequencyValue').textContent = frequency;
+                document.getElementById('pulseWidthSlider').value = pulseWidth;
+                document.getElementById('pulseWidthValue').textContent = pulseWidth;
+                document.getElementById('intensitySlider').value = intensity;
+                document.getElementById('intensityValue').textContent = intensity + '%';
+                document.getElementById('patternSelect').value = pattern;
+                
+                // Update visual parameters
+                document.getElementById('colorPicker').value = color;
+                document.getElementById('colorPreview').style.backgroundColor = color;
+                document.getElementById('brightnessSlider').value = brightness;
+                document.getElementById('brightnessValue').textContent = brightness + '%';
+                
+                addConsoleMessage(`[System] ${mode.charAt(0).toUpperCase() + mode.slice(1)} mode selected`);
+                updateOrbVisualization();
+            }
+
+            // Add message to console
+            function addConsoleMessage(message, isError = false) {
+                const consoleOutput = document.getElementById('consoleOutput');
+                const logEntry = document.createElement('div');
+                logEntry.className = 'log-entry';
+                if (isError) {
+                    logEntry.style.color = '#e74c3c';
+                }
+                logEntry.textContent = message;
+                consoleOutput.appendChild(logEntry);
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            }
+
+            // Update orb visualization based on current settings
+            function updateOrbVisualization() {
+                const color = document.getElementById('colorPicker').value;
+                const brightness = document.getElementById('brightnessSlider').value / 100;
+                const intensity = document.getElementById('intensitySlider').value / 100;
+                
+                // Update orb color and opacity based on settings
+                const orbOuter = document.querySelector('.orb-outer');
+                orbOuter.style.background = `linear-gradient(135deg, ${color} 0%, ${adjustColor(color, -30)} 100%)`;
+                orbOuter.style.opacity = brightness;
+                
+                // Adjust pulse animation speed based on frequency
+                const frequency = document.getElementById('frequencySlider').value;
+                const animationDuration = 3 - (frequency / 100 * 2); // Between 1-3s
+                orbOuter.style.animationDuration = `${animationDuration}s`;
+                
+                // Adjust sensor dots blinking based on intensity
+                const sensorDots = document.querySelectorAll('.sensor-dot');
+                sensorDots.forEach(dot => {
+                    dot.style.animationDuration = `${1 + (1 - intensity) * 2}s`;
+                    dot.style.opacity = 0.5 + intensity * 0.5;
+                });
+            }
+
+            // Adjust color brightness
+            function adjustColor(color, amount) {
+                return '#' + color.replace(/^#/, '').replace(/../g, color => ('0'+Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).slice(-2));
+            }
+
+            // Button event listeners
+            document.getElementById('refreshButton').addEventListener('click', function() {
+                addConsoleMessage('[System] Refreshing device status...');
+                getDeviceStatus();
+            });
+
+            document.getElementById('startSessionButton').addEventListener('click', function() {
+                const mode = document.querySelector('.mode-card.active').dataset.mode;
+                const user = document.getElementById('userSelect').value;
+                
+                addConsoleMessage(`[System] Starting ${mode} session for user ${user}...`);
+                
+                // Simulate sending control command
+                fetch('/api/device/control', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        command: 'start_session',
+                        parameters: {
+                            mode: mode,
+                            user: user,
+                            tens: {
+                                frequency: parseInt(document.getElementById('frequencySlider').value),
+                                pulse_width: parseInt(document.getElementById('pulseWidthSlider').value),
+                                intensity: parseInt(document.getElementById('intensitySlider').value) / 100,
+                                pattern: document.getElementById('patternSelect').value
+                            },
+                            visual: {
+                                color: document.getElementById('colorPicker').value,
+                                brightness: parseInt(document.getElementById('brightnessSlider').value) / 100,
+                                pattern: document.getElementById('visualPatternSelect').value
+                            },
+                            audio: {
+                                type: document.getElementById('audioSelect').value,
+                                volume: parseInt(document.getElementById('volumeSlider').value) / 100,
+                                frequency: parseInt(document.getElementById('audioFrequencySlider').value)
+                            },
+                            haptic: {
+                                intensity: parseInt(document.getElementById('hapticIntensitySlider').value) / 100,
+                                pattern: document.getElementById('hapticPatternSelect').value
+                            },
+                            thermal: {
+                                temperature: parseInt(document.getElementById('temperatureSlider').value),
+                                pattern: document.getElementById('thermalPatternSelect').value
+                            }
+                        }
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    addConsoleMessage(`[System] ${data.message}`);
+                })
+                .catch(error => {
+                    console.error('Error starting session:', error);
+                    addConsoleMessage('[Error] Failed to start session', true);
+                });
+            });
+
+            document.getElementById('savePresetButton').addEventListener('click', function() {
+                addConsoleMessage('[System] Preset saved successfully');
+            });
+
+            document.getElementById('resetButton').addEventListener('click', function() {
+                if (confirm('Are you sure you want to reset all parameters to default values?')) {
+                    // Reset to defaults
+                    document.getElementById('frequencySlider').value = 50;
+                    document.getElementById('frequencyValue').textContent = 50;
+                    document.getElementById('pulseWidthSlider').value = 200;
+                    document.getElementById('pulseWidthValue').textContent = 200;
+                    document.getElementById('intensitySlider').value = 60;
+                    document.getElementById('intensityValue').textContent = '60%';
+                    document.getElementById('patternSelect').value = 'continuous';
+                    
+                    document.getElementById('colorPicker').value = '#0072ff';
+                    document.getElementById('colorPreview').style.backgroundColor = '#0072ff';
+                    document.getElementById('brightnessSlider').value = 70;
+                    document.getElementById('brightnessValue').textContent = '70%';
+                    
+                    addConsoleMessage('[System] Parameters reset to default values');
+                    updateOrbVisualization();
+                }
+            });
+
+            document.getElementById('powerButton').addEventListener('click', function() {
+                if (confirm('Are you sure you want to power off the device?')) {
+                    addConsoleMessage('[System] Powering off device...');
+                    
+                    // Simulate power off
+                    setTimeout(() => {
+                        document.getElementById('connectionStatus').className = 'status-indicator status-disconnected';
+                        document.getElementById('connectionText').textContent = 'Disconnected';
+                        addConsoleMessage('[System] Device powered off');
+                    }, 1500);
+                }
+            });
+
+            document.getElementById('updateFirmwareButton').addEventListener('click', function() {
+                const progressBar = document.getElementById('updateProgress');
+                progressBar.style.display = 'block';
+                const progressIndicator = progressBar.querySelector('.progress-bar');
+                
+                let progress = 0;
+                addConsoleMessage('[System] Starting firmware update...');
+                
+                // Simulate firmware update
+                const interval = setInterval(() => {
+                    progress += 5;
+                    progressIndicator.style.width = `${progress}%`;
+                    progressIndicator.textContent = `${progress}%`;
+                    
+                    if (progress === 25) {
+                        addConsoleMessage('[System] Downloading firmware package...');
+                    } else if (progress === 50) {
+                        addConsoleMessage('[System] Verifying package integrity...');
+                    } else if (progress === 75) {
+                        addConsoleMessage('[System] Installing firmware update...');
+                    }
+                    
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        addConsoleMessage('[System] Firmware updated successfully to v2.4.0');
+                        setTimeout(() => {
+                            document.getElementById('firmwareModal').querySelector('.btn-close').click();
+                        }, 1500);
+                    }
+                }, 300);
+            });
+
+            document.getElementById('sendCommandButton').addEventListener('click', function() {
+                const commandInput = document.getElementById('commandInput');
+                const command = commandInput.value.trim();
+                
+                if (command) {
+                    addConsoleMessage(`[User] ${command}`);
+                    
+                    // Process command (simple simulation)
+                    setTimeout(() => {
+                        if (command.toLowerCase().includes('status')) {
+                            addConsoleMessage('[System] Device status: Online and operational');
+                        } else if (command.toLowerCase().includes('reset')) {
+                            addConsoleMessage('[System] Performing soft reset...');
+                            setTimeout(() => {
+                                addConsoleMessage('[System] Reset complete');
+                            }, 1000);
+                        } else if (command.toLowerCase().includes('battery')) {
+                            addConsoleMessage('[System] Battery level: 85%, estimated 4.5 hours remaining');
+                        } else if (command.toLowerCase().includes('help')) {
+                            addConsoleMessage('[System] Available commands: status, reset, battery, help');
+                        } else {
+                            addConsoleMessage(`[System] Unknown command: ${command}`, true);
+                        }
+                    }, 500);
+                    
+                    commandInput.value = '';
+                }
+            });
+
+            // Command input enter key
+            document.getElementById('commandInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('sendCommandButton').click();
+                }
+            });
+
+            // Initialize
+            getDeviceStatus();
+            updateOrbVisualization();
+        });
+    </script>
+</body>
+</html>
