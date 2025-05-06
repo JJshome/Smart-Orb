@@ -6,6 +6,8 @@ An advanced wearable smart device for exercise enhancement using electrochemical
   <img src="https://raw.githubusercontent.com/JJshome/Smart-Orb/main/code/web_dashboard/static/smart_orb_animation.svg" alt="Smart Orb Animation" width="600">
 </p>
 
+> **IMPORTANT INTELLECTUAL PROPERTY NOTICE**: The Smart Orb technology described in this repository is based on patent-pending technology owned by Ucaretron Inc. (Patent Application No. KR10-2024-0071235). While the software code in this repository is available under the MIT License, the underlying technology, methodologies, and processes described herein are proprietary to Ucaretron Inc. and may not be used for commercial purposes without explicit written permission. All rights related to the core Smart Orb technology are reserved by Ucaretron Inc.
+
 ## Overview
 
 Smart Orb is a spherical handheld device that integrates multiple sensing and stimulation technologies to enhance physical performance, facilitate recovery, and improve overall well-being. This device leverages electrochemical impedance measurement and transcutaneous electrical nerve stimulation (TENS) along with multi-sensory feedback to provide a comprehensive neuro-modulation solution.
@@ -231,10 +233,23 @@ Smart Orb builds on extensive research in neurostimulation, electrochemical impe
 - Personalized TENS parameters based on individual physiology yield superior outcomes
 - Closed-loop systems that adapt in real-time to physiological changes show improved efficacy
 
+## Intellectual Property Statement
+
+The Smart Orb technology is developed and owned by Ucaretron Inc., a company specializing in advanced digital therapeutics and neuro-modulation technologies. The core technology described in this repository is protected under Patent Application No. KR10-2024-0071235 ("Electrochemical Impedance and TENS-based Multi-Sensory Integrated Neuro-Modulation Wearable Smart Device and System").
+
+### Rights Clarification:
+
+- **Software Code**: The software code in this repository is released under the MIT License, allowing for modification, distribution, and use in both private and commercial software projects.
+- **Core Technology**: The underlying technology, methodologies, processes, and hardware designs described in this repository are proprietary to Ucaretron Inc. and protected by pending patent applications. Commercial use of these aspects requires explicit permission from Ucaretron Inc.
+
+For licensing inquiries or commercial use permissions, please contact: licensing@ucaretron.com
+
 ## Contributing
 
-We welcome contributions! Please see our [contributing guidelines](CONTRIBUTING.md) for details on how to get involved.
+We welcome contributions to improve the software aspects of the Smart Orb system. Please see our [contributing guidelines](CONTRIBUTING.md) for details on how to get involved. Note that all contributors must acknowledge the intellectual property rights of Ucaretron Inc. regarding the core technology.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+The software code in this repository is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+The Smart Orb technology, methodologies, and processes are proprietary to Ucaretron Inc. - all rights reserved.
