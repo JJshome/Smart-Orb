@@ -1,0 +1,87 @@
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <circle cx="250" cy="250" r="240" fill="#f0f4f8" />
+  
+  <!-- Orb Gradient -->
+  <defs>
+    <radialGradient id="orbGradient" cx="50%" cy="50%" r="50%" fx="30%" fy="30%">
+      <stop offset="0%" stop-color="#4dabf7" />
+      <stop offset="70%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#1a56db" />
+    </radialGradient>
+    
+    <!-- Light Reflection Effect -->
+    <radialGradient id="lightReflection" cx="30%" cy="30%" r="30%" fx="25%" fy="25%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </radialGradient>
+    
+    <!-- Icon Gradient -->
+    <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316" />
+      <stop offset="100%" stop-color="#ef4444" />
+    </linearGradient>
+    
+    <!-- Pulse Animation -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  
+  <!-- Smart Orb Body -->
+  <g>
+    <circle cx="250" cy="250" r="140" fill="url(#orbGradient)" />
+    <circle cx="250" cy="250" r="140" fill="url(#lightReflection)" />
+    
+    <!-- Pulse Ring 1 -->
+    <circle cx="250" cy="250" r="160" fill="none" stroke="#3b82f6" stroke-width="3" stroke-opacity="0.5" stroke-dasharray="10 5">
+      <animate attributeName="r" from="150" to="180" dur="3s" repeatCount="indefinite" />
+      <animate attributeName="stroke-opacity" from="0.5" to="0" dur="3s" repeatCount="indefinite" />
+    </circle>
+    
+    <!-- Pulse Ring 2 -->
+    <circle cx="250" cy="250" r="170" fill="none" stroke="#3b82f6" stroke-width="2" stroke-opacity="0.3" stroke-dasharray="5 5">
+      <animate attributeName="r" from="160" to="190" dur="3s" begin="0.5s" repeatCount="indefinite" />
+      <animate attributeName="stroke-opacity" from="0.3" to="0" dur="3s" begin="0.5s" repeatCount="indefinite" />
+    </circle>
+    
+    <!-- Pulse Ring 3 -->
+    <circle cx="250" cy="250" r="180" fill="none" stroke="#3b82f6" stroke-width="1" stroke-opacity="0.2" stroke-dasharray="2 2">
+      <animate attributeName="r" from="170" to="200" dur="3s" begin="1s" repeatCount="indefinite" />
+      <animate attributeName="stroke-opacity" from="0.2" to="0" dur="3s" begin="1s" repeatCount="indefinite" />
+    </circle>
+  </g>
+  
+  <!-- Feature Icons -->
+  <g>
+    <!-- Heart Rate Icon -->
+    <circle cx="170" cy="180" r="30" fill="#ffffff" filter="url(#glow)" />
+    <g transform="translate(150, 165)">
+      <path d="M5,15 L15,15 L20,5 L25,25 L30,15 L40,15" stroke="url(#iconGradient)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+    
+    <!-- TENS Icon -->
+    <circle cx="320" cy="180" r="30" fill="#ffffff" filter="url(#glow)" />
+    <g transform="translate(305, 165)">
+      <path d="M15,5 L15,15 L5,15 L5,25 M25,5 L25,15 L35,15 L35,25" stroke="url(#iconGradient)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+    
+    <!-- Exercise Icon -->
+    <circle cx="170" cy="320" r="30" fill="#ffffff" filter="url(#glow)" />
+    <g transform="translate(155, 305)">
+      <path d="M10,15 C10,9 20,5 25,15 C30,25 40,21 40,15" stroke="url(#iconGradient)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+    
+    <!-- AI Icon -->
+    <circle cx="320" cy="320" r="30" fill="#ffffff" filter="url(#glow)" />
+    <g transform="translate(305, 305)">
+      <path d="M15,5 L25,5 L30,15 L25,25 L15,25 L10,15 Z" stroke="url(#iconGradient)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M15,5 L25,5 L30,15 L25,25 L15,25 L10,15 Z" stroke="#ffffff" stroke-width="1" fill="none" stroke-opacity="0.5" />
+    </g>
+  </g>
+  
+  <!-- Text -->
+  <text x="250" y="440" font-family="Arial, sans-serif" font-size="28" font-weight="bold" text-anchor="middle" fill="#1e40af">Smart Orb</text>
+  <text x="250" y="470" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#4b5563">Exercise Enhancement System</text>
+</svg>
