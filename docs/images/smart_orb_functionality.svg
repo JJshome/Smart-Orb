@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="orbGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00c6ff"/>
+      <stop offset="100%" stop-color="#0072ff"/>
+    </linearGradient>
+    <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f5f7fa"/>
+      <stop offset="100%" stop-color="#c3cfe2"/>
+    </linearGradient>
+    <linearGradient id="sensorGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ee9ca7"/>
+      <stop offset="100%" stop-color="#ffdde1"/>
+    </linearGradient>
+    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="2" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+      refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#34495e"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" rx="5" ry="5" fill="#ffffff"/>
+  
+  <!-- Title -->
+  <text x="270" y="40" font-family="Arial" font-size="24" font-weight="bold" fill="#2c3e50">Smart Orb Functionality</text>
+  
+  <!-- User with Smart Orb -->
+  <circle cx="150" cy="150" r="30" fill="#bdc3c7"/> <!-- head -->
+  <rect x="140" y="180" width="20" height="60" fill="#bdc3c7"/> <!-- body -->
+  <line x1="140" y1="200" x2="120" y2="240" stroke="#bdc3c7" stroke-width="10" stroke-linecap="round"/> <!-- left arm -->
+  <line x1="160" y1="200" x2="200" y2="200" stroke="#bdc3c7" stroke-width="10" stroke-linecap="round"/> <!-- right arm -->
+  <line x1="150" y1="240" x2="140" y2="300" stroke="#bdc3c7" stroke-width="10" stroke-linecap="round"/> <!-- left leg -->
+  <line x1="150" y1="240" x2="160" y2="300" stroke="#bdc3c7" stroke-width="10" stroke-linecap="round"/> <!-- right leg -->
+  
+  <!-- Smart Orb in Hand -->
+  <circle cx="220" cy="200" r="30" fill="url(#orbGradient)" filter="url(#dropShadow)">
+    <animate attributeName="r" values="30;32;30" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="220" cy="200" r="23" fill="#ffffff" opacity="0.2"/>
+  <circle cx="220" cy="200" r="15" fill="#ffffff" opacity="0.3"/>
+  
+  <!-- Sensors on Body -->
+  <rect x="230" y="250" width="30" height="15" rx="5" ry="5" fill="url(#sensorGradient)" filter="url(#dropShadow)"/> 
+  
+  <!-- Data Flow Arrows -->
+  <line x1="220" y1="200" x2="400" y2="200" stroke="#34495e" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+  <line x1="230" y1="257" x2="300" y2="257" stroke="#34495e" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+  <line x1="320" y1="257" x2="400" y2="250" stroke="#34495e" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+  
+  <!-- Edge AI Processing Box -->
+  <rect x="400" y="170" width="150" height="100" rx="10" ry="10" fill="#3498db" filter="url(#dropShadow)"/>
+  <text x="425" y="210" font-family="Arial" font-size="16" font-weight="bold" fill="white">Edge AI</text>
+  <text x="415" y="230" font-family="Arial" font-size="12" fill="white">Signal Processing</text>
+  <text x="415" y="250" font-family="Arial" font-size="12" fill="white">Pattern Recognition</text>
+  
+  <!-- Stimulation Output Arrow -->
+  <line x1="550" y1="220" x2="620" y2="220" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Multi-Sensory Stimulation Box -->
+  <rect x="620" y="170" width="150" height="100" rx="10" ry="10" fill="#9b59b6" filter="url(#dropShadow)"/>
+  <text x="650" y="200" font-family="Arial" font-size="16" font-weight="bold" fill="white">Stimulation</text>
+  <text x="640" y="225" font-family="Arial" font-size="12" fill="white">Visual (LED)</text>
+  <text x="640" y="245" font-family="Arial" font-size="12" fill="white">Audio (Speaker)</text>
+  <text x="640" y="265" font-family="Arial" font-size="12" fill="white">Tactile (Vibration)</text>
+  
+  <!-- Feedback Loop -->
+  <path d="M620,300 C500,350 400,350 400,270" fill="none" stroke="#34495e" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+  <text x="480" y="350" font-family="Arial" font-size="14" fill="#34495e">Feedback Loop</text>
+  
+  <!-- Detailed Features -->
+  <rect x="150" y="380" width="500" height="180" rx="10" ry="10" fill="#ecf0f1" filter="url(#dropShadow)"/>
+  
+  <!-- Feature Icons and Text -->
+  <!-- Electrochemical Impedance Analysis -->
+  <circle cx="200" cy="420" r="20" fill="#e74c3c"/>
+  <text x="180" y="425" font-family="Arial" font-size="12" font-weight="bold" fill="white">ECI</text>
+  <text x="230" y="425" font-family="Arial" font-size="14" fill="#2c3e50">Electrochemical Impedance Analysis</text>
+  
+  <!-- TENS Stimulation -->
+  <circle cx="200" cy="460" r="20" fill="#f39c12"/>
+  <text x="190" y="465" font-family="Arial" font-size="12" font-weight="bold" fill="white">T</text>
+  <text x="230" y="465" font-family="Arial" font-size="14" fill="#2c3e50">Adaptive TENS Stimulation</text>
+  
+  <!-- Multi-Sensory Integration -->
+  <circle cx="200" cy="500" r="20" fill="#2ecc71"/>
+  <text x="190" y="505" font-family="Arial" font-size="12" font-weight="bold" fill="white">M</text>
+  <text x="230" y="505" font-family="Arial" font-size="14" fill="#2c3e50">Multi-Sensory Integration</text>
+  
+  <!-- Wireless Connectivity -->
+  <circle cx="200" cy="540" r="20" fill="#3498db"/>
+  <text x="190" y="545" font-family="Arial" font-size="12" font-weight="bold" fill="white">W</text>
+  <text x="230" y="545" font-family="Arial" font-size="14" fill="#2c3e50">Wireless Connectivity</text>
+  
+  <!-- Application Areas -->
+  <rect x="450" y="420" width="160" height="25" rx="5" ry="5" fill="#16a085"/>
+  <text x="460" y="437" font-family="Arial" font-size="12" fill="white">Exercise Enhancement</text>
+  
+  <rect x="450" y="450" width="160" height="25" rx="5" ry="5" fill="#27ae60"/>
+  <text x="460" y="467" font-family="Arial" font-size="12" fill="white">Pain Management</text>
+  
+  <rect x="450" y="480" width="160" height="25" rx="5" ry="5" fill="#2980b9"/>
+  <text x="460" y="497" font-family="Arial" font-size="12" fill="white">Sleep Enhancement</text>
+  
+  <rect x="450" y="510" width="160" height="25" rx="5" ry="5" fill="#8e44ad"/>
+  <text x="460" y="527" font-family="Arial" font-size="12" fill="white">Stress Reduction</text>
+  
+  <!-- Pulse Ring Animation -->
+  <circle cx="220" cy="200" r="35" stroke="#00c6ff" stroke-width="2" fill="transparent" opacity="0">
+    <animate attributeName="r" values="35;65" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.7;0" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Footer Note -->
+  <text x="250" y="580" font-family="Arial" font-size="10" fill="#7f8c8d">© 2024 Ucaretron Inc. - Patent Pending Technology (KR10-2024-0071235)</text>
+</svg>
