@@ -21,6 +21,8 @@ Experience the Smart Orb's capabilities through our interactive web simulation. 
 
 ### Running the Web Demo
 
+#### Method 1: Direct Python Execution
+
 ```bash
 # Clone the repository
 git clone https://github.com/JJshome/Smart-Orb.git
@@ -35,6 +37,23 @@ python app.py
 ```
 
 Then open your browser and go to: `http://localhost:5000`
+
+#### Method 2: Docker Deployment (Recommended)
+
+For the easiest deployment option, we provide Docker support:
+
+```bash
+# Clone the repository
+git clone https://github.com/JJshome/Smart-Orb.git
+cd Smart-Orb
+
+# Build and start the container
+docker-compose up -d
+
+# The dashboard will be available at http://localhost:5000
+```
+
+This method ensures all dependencies are properly installed and isolated.
 
 <p align="center">
   <img src="https://github.com/JJshome/Smart-Orb/assets/107289883/1a2a3456-0f8b-4c78-8d99-30d61c5e6de7" alt="Smart Orb Dashboard" width="700">
@@ -75,9 +94,11 @@ Smart-Orb/
 │   ├── designs/
 │   ├── firmware/
 │   └── schematics/
-└── research/
-    ├── literature/
-    └── protocols/
+├── research/
+│   ├── literature/
+│   └── protocols/
+├── Dockerfile                       # Docker configuration
+└── docker-compose.yml               # Docker Compose for easy deployment
 ```
 
 ## Technical Specifications
@@ -163,6 +184,37 @@ This will run three different exercise simulations and generate visualization pl
    - Audio stimulation via binaural beats and rhythmic cues
    - Tactile feedback through precision vibration patterns
    - TENS stimulation to target muscles for enhanced performance
+
+## Deployment Options
+
+### Local Development Server
+
+For development and testing:
+
+```bash
+cd code/web_dashboard
+python app.py
+```
+
+### Docker Container
+
+For production or cross-platform deployment:
+
+```bash
+# Build the Docker image
+docker build -t smart-orb-dashboard .
+
+# Run the container
+docker run -p 5000:5000 -d smart-orb-dashboard
+```
+
+### Docker Compose
+
+For easy setup with proper volumes and environment:
+
+```bash
+docker-compose up -d
+```
 
 ## Future Development
 
