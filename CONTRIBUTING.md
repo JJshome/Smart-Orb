@@ -2,6 +2,15 @@
 
 First off, thank you for considering contributing to Smart Orb! It's people like you that make this project a great tool for health and wellness enhancement.
 
+## Important Intellectual Property Notice
+
+Before contributing to the Smart Orb project, please be aware of the following intellectual property considerations:
+
+- The Smart Orb technology is owned by Ucaretron Inc. and is protected under Patent Application No. KR10-2024-0071235 ("Electrochemical Impedance and TENS-based Multi-Sensory Integrated Neuro-Modulation Wearable Smart Device and System").
+- While the **software code** in this repository is released under the MIT License, the **core technology, methodologies, and processes** described are proprietary to Ucaretron Inc.
+- By contributing to this project, you acknowledge that your contributions to the software code will be licensed under the MIT License, but you do not acquire any rights to the proprietary technology.
+- Any contributions that significantly extend or modify the core proprietary technology may require a Contributor License Agreement (CLA) with Ucaretron Inc.
+
 ## How Can I Contribute?
 
 ### Reporting Bugs
@@ -46,6 +55,7 @@ Enhancement suggestions are tracked as GitHub issues. Create an issue and provid
 * Include appropriate tests.
 * End all files with a newline.
 * Update the documentation to reflect changes.
+* **Important**: Ensure your contributions respect the intellectual property boundaries described above.
 
 ## Development Environment Setup
 
@@ -95,6 +105,15 @@ When contributing hardware design changes, please:
 * Include detailed documentation of component specifications
 * Consider accessibility and ergonomics in all physical designs
 * Test designs with actual prototypes when possible
+* Note that hardware designs may be more closely tied to Ucaretron Inc.'s proprietary technology; consult before making significant changes
+
+## Intellectual Property and Legal Boundaries
+
+To ensure that contributions respect Ucaretron Inc.'s intellectual property:
+
+1. Focus contributions on improving the software implementation, user interface, documentation, and testing.
+2. Avoid modifying or extending the core algorithms and methodologies that constitute the proprietary technology.
+3. If you're unsure whether your contribution might affect the proprietary technology, please ask for guidance by opening an issue or contacting the maintainers.
 
 ## Code of Conduct
 
@@ -103,3 +122,5 @@ By participating in this project, you agree to uphold our [Code of Conduct](CODE
 ## Questions?
 
 Feel free to contact the project maintainers if you have any questions. We're here to help!
+
+For intellectual property or licensing questions, please contact: licensing@ucaretron.com
