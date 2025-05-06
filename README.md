@@ -2,11 +2,43 @@
 
 An advanced wearable smart device for exercise enhancement using electrochemical impedance and TENS-based multi-sensory integrated neuro-modulation.
 
-![Smart Orb Concept](https://github.com/JJshome/Smart-Orb/assets/107289883/1a2a3456-0f8b-4c78-8d99-30d61c5e6de7)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/JJshome/Smart-Orb/main/code/web_dashboard/static/smart_orb_animation.svg" alt="Smart Orb Animation" width="600">
+</p>
 
 ## Overview
 
 Smart Orb is a spherical handheld device that integrates multiple sensing and stimulation technologies to enhance physical performance, facilitate recovery, and improve overall well-being. This device leverages electrochemical impedance measurement and transcutaneous electrical nerve stimulation (TENS) along with multi-sensory feedback to provide a comprehensive neuro-modulation solution.
+
+## Interactive Web Demo
+
+Experience the Smart Orb's capabilities through our interactive web simulation. The web dashboard allows you to:
+
+- Simulate various exercise scenarios with different intensity levels
+- Visualize real-time physiological signals (heart rate, EMG, acceleration)
+- See how TENS parameters adapt to exercise phases
+- Explore different user profiles and their personalized stimulation patterns
+
+### Running the Web Demo
+
+```bash
+# Clone the repository
+git clone https://github.com/JJshome/Smart-Orb.git
+cd Smart-Orb
+
+# Install requirements
+pip install -r requirements.txt
+
+# Launch the web dashboard
+cd code/web_dashboard
+python app.py
+```
+
+Then open your browser and go to: `http://localhost:5000`
+
+<p align="center">
+  <img src="https://github.com/JJshome/Smart-Orb/assets/107289883/1a2a3456-0f8b-4c78-8d99-30d61c5e6de7" alt="Smart Orb Dashboard" width="700">
+</p>
 
 ## Key Features
 
@@ -34,7 +66,11 @@ Smart-Orb/
 │   │   └── test_stimulation_controller.py # Test script for simulation
 │   ├── pain_management/
 │   ├── sleep_enhancement/
-│   └── stress_reduction/
+│   ├── stress_reduction/
+│   └── web_dashboard/               # Interactive web demonstration
+│       ├── app.py                   # Flask application for web dashboard
+│       ├── templates/               # HTML templates
+│       └── static/                  # CSS, JS, and images
 ├── hardware/
 │   ├── designs/
 │   ├── firmware/
@@ -86,6 +122,8 @@ The exercise enhancement module optimizes workout performance through:
   - Matplotlib
   - Joblib
   - pytest (for testing)
+  - Flask (for web dashboard)
+  - Plotly (for interactive charts)
 
 ### Installation
 
@@ -103,6 +141,28 @@ python test_stimulation_controller.py
 ```
 
 This will run three different exercise simulations and generate visualization plots in the `output/` directory.
+
+## How It Works
+
+<p align="center">
+  <img src="https://github.com/JJshome/Smart-Orb/assets/107289883/1a2a3456-0f8b-4c78-8d99-30d61c5e6de7" alt="Smart Orb Functionality" width="700">
+</p>
+
+1. The user holds the Smart Orb in their hand while wearing the wireless sensor/stimulation unit on the target body area
+2. Real-time sensors continuously gather physiological data:
+   - Heart rate and blood oxygen levels via PPG
+   - Stress levels via GSR
+   - Muscle activity via EMG
+   - Body composition via electrochemical impedance
+3. Edge AI processes this data to determine:
+   - Current exercise type and intensity
+   - Physiological state (stress, fatigue, etc.)
+   - Optimal stimulation parameters
+4. Adaptive stimulation is delivered through multiple sensory channels:
+   - Visual feedback through color-changing LEDs
+   - Audio stimulation via binaural beats and rhythmic cues
+   - Tactile feedback through precision vibration patterns
+   - TENS stimulation to target muscles for enhanced performance
 
 ## Future Development
 
