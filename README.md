@@ -168,7 +168,7 @@ This will run three different exercise simulations and generate visualization pl
 ## How It Works
 
 <p align="center">
-  <img src="./docs/images/smart_orb_functionality.png" alt="Smart Orb Functionality" width="700">
+  <img src="./docs/images/smart_orb_functionality.svg" alt="Smart Orb Functionality" width="700">
 </p>
 
 1. The user holds the Smart Orb in their hand while wearing the wireless sensor/stimulation unit on the target body area
