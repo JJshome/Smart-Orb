@@ -1,6 +1,6 @@
-MIT License
+MIT License (Applies to Software Code Only)
 
-Copyright (c) 2025 JJshome
+Copyright (c) 2025 Ucaretron Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,27 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+-----------------------------------------------------------------------------------
+
+PROPRIETARY TECHNOLOGY NOTICE
+
+The Smart Orb technology, including but not limited to the methodologies, processes, 
+hardware designs, and concepts described in this repository, is proprietary technology 
+owned by Ucaretron Inc. and is protected by patent-pending status.
+
+Patent Application No.: KR10-2024-0071235
+Title: "Electrochemical Impedance and TENS-based Multi-Sensory Integrated 
+        Neuro-Modulation Wearable Smart Device and System"
+
+Any use, reproduction, distribution, or implementation of the proprietary technology 
+for commercial purposes without explicit written permission from Ucaretron Inc. is 
+strictly prohibited and may violate applicable intellectual property laws.
+
+While the software code is shared under the MIT License, the intellectual property 
+rights to the core technology remain with Ucaretron Inc.
+
+For licensing inquiries or permission requests, please contact:
+licensing@ucaretron.com
+
+All rights reserved. © 2025 Ucaretron Inc.
