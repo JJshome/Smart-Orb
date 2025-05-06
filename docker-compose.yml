@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  smart-orb-web:
+    build: .
+    container_name: smart-orb-dashboard
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=code/web_dashboard/app.py
+      - FLASK_ENV=production
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
