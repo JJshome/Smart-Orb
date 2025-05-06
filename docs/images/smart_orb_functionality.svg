@@ -1,127 +1,196 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="orbGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#00c6ff"/>
-      <stop offset="100%" stop-color="#0072ff"/>
-    </linearGradient>
-    <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#f5f7fa"/>
-      <stop offset="100%" stop-color="#c3cfe2"/>
-    </linearGradient>
-    <linearGradient id="sensorGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#ee9ca7"/>
-      <stop offset="100%" stop-color="#ffdde1"/>
-    </linearGradient>
-    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
-      <feOffset dx="2" dy="2" result="offsetblur"/>
-      <feComponentTransfer>
-        <feFuncA type="linear" slope="0.3"/>
-      </feComponentTransfer>
-      <feMerge>
-        <feMergeNode/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-    <marker id="arrowhead" markerWidth="10" markerHeight="7" 
-      refX="0" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#34495e"/>
-    </marker>
-  </defs>
-  
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
   <!-- Background -->
-  <rect width="800" height="600" rx="5" ry="5" fill="#ffffff"/>
+  <rect width="1000" height="600" fill="#f9f9fb" />
   
   <!-- Title -->
-  <text x="270" y="40" font-family="Arial" font-size="24" font-weight="bold" fill="#2c3e50">Smart Orb Functionality</text>
+  <text x="500" y="40" font-family="Arial" font-size="24" font-weight="bold" fill="#4a4e69" text-anchor="middle">Smart Orb Functionality</text>
   
-  <!-- User with Smart Orb -->
-  <circle cx="150" cy="150" r="30" fill="#bdc3c7"/> <!-- head -->
-  <rect x="140" y="180" width="20" height="60" fill="#bdc3c7"/> <!-- body -->
-  <line x1="140" y1="200" x2="120" y2="240" stroke="#bdc3c7" stroke-width="10" stroke-linecap="round"/> <!-- left arm -->
-  <line x1="160" y1="200" x2="200" y2="200" stroke="#bdc3c7" stroke-width="10" stroke-linecap="round"/> <!-- right arm -->
-  <line x1="150" y1="240" x2="140" y2="300" stroke="#bdc3c7" stroke-width="10" stroke-linecap="round"/> <!-- left leg -->
-  <line x1="150" y1="240" x2="160" y2="300" stroke="#bdc3c7" stroke-width="10" stroke-linecap="round"/> <!-- right leg -->
+  <!-- Human Figure -->
+  <g transform="translate(250, 300)">
+    <!-- Body -->
+    <ellipse cx="0" cy="-100" rx="30" ry="40" fill="#f5cac3" stroke="#333" stroke-width="1.5" />
+    <path d="M -15,-80 Q -20,-40 -25,0 L -60,120 M -25,0 L -20,120 M -15,-80 Q -10,-40 -5,0 L 20,120 M -5,0 L 60,120" fill="none" stroke="#333" stroke-width="1.5" />
+    <path d="M -15,-80 Q 0,-95 15,-80 M 0,-60 L 0,40" fill="none" stroke="#333" stroke-width="1.5" />
+    
+    <!-- Hand with Orb -->
+    <g transform="rotate(-30)">
+      <path d="M 0,40 Q -5,50 -10,80 Q -5,90 0,85 L 0,40" fill="#f5cac3" stroke="#333" stroke-width="1.5" />
+      <path d="M 0,40 Q 5,50 10,80 Q 5,90 0,85 L 0,40" fill="#f5cac3" stroke="#333" stroke-width="1.5" />
+    </g>
+    
+    <!-- Smart Orb -->
+    <circle cx="0" cy="80" r="30" fill="#6264a7" opacity="0.8">
+      <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="0" cy="80" r="32" fill="none" stroke="#4a4e69" stroke-width="1" />
+    
+    <!-- TENS Patch on Arm -->
+    <rect x="35" y="-5" width="25" height="15" rx="2" fill="#c7f9cc" stroke="#333" stroke-width="1" />
+    
+    <!-- Wireless Connection Between Orb and Patch -->
+    <path d="M 5,70 Q 15,40 35,5" fill="none" stroke="#6264a7" stroke-width="1.5" stroke-dasharray="5,3">
+      <animate attributeName="stroke-dashoffset" values="8;0" dur="1s" repeatCount="indefinite" />
+    </path>
+  </g>
   
-  <!-- Smart Orb in Hand -->
-  <circle cx="220" cy="200" r="30" fill="url(#orbGradient)" filter="url(#dropShadow)">
-    <animate attributeName="r" values="30;32;30" dur="2s" repeatCount="indefinite"/>
-  </circle>
-  <circle cx="220" cy="200" r="23" fill="#ffffff" opacity="0.2"/>
-  <circle cx="220" cy="200" r="15" fill="#ffffff" opacity="0.3"/>
+  <!-- Sensing Elements -->
+  <g transform="translate(500, 300)">
+    <!-- Sensing Title -->
+    <text x="0" y="-200" font-family="Arial" font-size="18" font-weight="bold" fill="#333" text-anchor="middle">Sensing Technologies</text>
+    
+    <!-- PPG -->
+    <circle cx="-150" cy="-150" r="40" fill="#ffd7ba" stroke="#333" stroke-width="1.5" />
+    <text x="-150" y="-145" font-family="Arial" font-size="14" font-weight="bold" fill="#333" text-anchor="middle">PPG</text>
+    <text x="-150" y="-125" font-family="Arial" font-size="12" fill="#555" text-anchor="middle">Heart Rate, SpO2</text>
+    
+    <!-- GSR -->
+    <circle cx="-50" cy="-150" r="40" fill="#ffd7ba" stroke="#333" stroke-width="1.5" />
+    <text x="-50" y="-145" font-family="Arial" font-size="14" font-weight="bold" fill="#333" text-anchor="middle">GSR</text>
+    <text x="-50" y="-125" font-family="Arial" font-size="12" fill="#555" text-anchor="middle">Stress Levels</text>
+    
+    <!-- EMG -->
+    <circle cx="50" cy="-150" r="40" fill="#ffd7ba" stroke="#333" stroke-width="1.5" />
+    <text x="50" y="-145" font-family="Arial" font-size="14" font-weight="bold" fill="#333" text-anchor="middle">EMG</text>
+    <text x="50" y="-125" font-family="Arial" font-size="12" fill="#555" text-anchor="middle">Muscle Activity</text>
+    
+    <!-- Impedance -->
+    <circle cx="150" cy="-150" r="40" fill="#ffd7ba" stroke="#333" stroke-width="1.5" />
+    <text x="150" y="-145" font-family="Arial" font-size="14" font-weight="bold" fill="#333" text-anchor="middle">Impedance</text>
+    <text x="150" y="-125" font-family="Arial" font-size="12" fill="#555" text-anchor="middle">Body Composition</text>
+    
+    <!-- Connections to AI -->
+    <path d="M -150,-110 L -150,-70 L 0,-20" fill="none" stroke="#6264a7" stroke-width="1.5" />
+    <path d="M -50,-110 L -50,-70 L 0,-20" fill="none" stroke="#6264a7" stroke-width="1.5" />
+    <path d="M 50,-110 L 50,-70 L 0,-20" fill="none" stroke="#6264a7" stroke-width="1.5" />
+    <path d="M 150,-110 L 150,-70 L 0,-20" fill="none" stroke="#6264a7" stroke-width="1.5" />
+    
+    <!-- AI Processing -->
+    <rect x="-75" y="-50" width="150" height="60" rx="10" fill="#c7ddff" stroke="#333" stroke-width="1.5" />
+    <text x="0" y="-20" font-family="Arial" font-size="16" font-weight="bold" fill="#333" text-anchor="middle">Edge AI Processing</text>
+    
+    <!-- Connection to Stimulation -->
+    <path d="M 0,10 L 0,50" fill="none" stroke="#6264a7" stroke-width="2" stroke-dasharray="5,3">
+      <animate attributeName="stroke-dashoffset" values="8;0" dur="1s" repeatCount="indefinite" />
+    </path>
+  </g>
   
-  <!-- Sensors on Body -->
-  <rect x="230" y="250" width="30" height="15" rx="5" ry="5" fill="url(#sensorGradient)" filter="url(#dropShadow)"/> 
+  <!-- Stimulation Elements -->
+  <g transform="translate(500, 350)">
+    <!-- Stimulation Title -->
+    <text x="0" y="30" font-family="Arial" font-size="18" font-weight="bold" fill="#333" text-anchor="middle">Stimulation Technologies</text>
+    
+    <!-- Visual -->
+    <circle cx="-150" cy="100" r="40" fill="#d8e2dc" stroke="#333" stroke-width="1.5" />
+    <text x="-150" y="105" font-family="Arial" font-size="14" font-weight="bold" fill="#333" text-anchor="middle">Visual</text>
+    <text x="-150" y="125" font-family="Arial" font-size="12" fill="#555" text-anchor="middle">LED Array</text>
+    
+    <!-- Audio -->
+    <circle cx="-50" cy="100" r="40" fill="#d8e2dc" stroke="#333" stroke-width="1.5" />
+    <text x="-50" y="105" font-family="Arial" font-size="14" font-weight="bold" fill="#333" text-anchor="middle">Audio</text>
+    <text x="-50" y="125" font-family="Arial" font-size="12" fill="#555" text-anchor="middle">Binaural Beats</text>
+    
+    <!-- Tactile -->
+    <circle cx="50" cy="100" r="40" fill="#d8e2dc" stroke="#333" stroke-width="1.5" />
+    <text x="50" y="105" font-family="Arial" font-size="14" font-weight="bold" fill="#333" text-anchor="middle">Tactile</text>
+    <text x="50" y="125" font-family="Arial" font-size="12" fill="#555" text-anchor="middle">Vibration</text>
+    
+    <!-- TENS -->
+    <circle cx="150" cy="100" r="40" fill="#d8e2dc" stroke="#333" stroke-width="1.5" />
+    <text x="150" y="105" font-family="Arial" font-size="14" font-weight="bold" fill="#333" text-anchor="middle">TENS</text>
+    <text x="150" y="125" font-family="Arial" font-size="12" fill="#555" text-anchor="middle">Electrical Stim</text>
+    
+    <!-- Connections from AI -->
+    <path d="M 0,50 L 0,70 L -150,60 L -150,60" fill="none" stroke="#6264a7" stroke-width="1.5" />
+    <path d="M 0,50 L 0,70 L -50,60 L -50,60" fill="none" stroke="#6264a7" stroke-width="1.5" />
+    <path d="M 0,50 L 0,70 L 50,60 L 50,60" fill="none" stroke="#6264a7" stroke-width="1.5" />
+    <path d="M 0,50 L 0,70 L 150,60 L 150,60" fill="none" stroke="#6264a7" stroke-width="1.5" />
+  </g>
   
-  <!-- Data Flow Arrows -->
-  <line x1="220" y1="200" x2="400" y2="200" stroke="#34495e" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
-  <line x1="230" y1="257" x2="300" y2="257" stroke="#34495e" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
-  <line x1="320" y1="257" x2="400" y2="250" stroke="#34495e" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+  <!-- Outcome Indicators -->
+  <g transform="translate(800, 300)">
+    <!-- Outcomes Title -->
+    <text x="0" y="-50" font-family="Arial" font-size="18" font-weight="bold" fill="#333" text-anchor="middle">Outcomes</text>
+    
+    <!-- Performance -->
+    <rect x="-80" y="0" width="160" height="40" rx="5" fill="#ffcfd2" stroke="#333" stroke-width="1.5" />
+    <text x="0" y="25" font-family="Arial" font-size="14" font-weight="bold" fill="#333" text-anchor="middle">Enhanced Performance</text>
+    
+    <!-- Pain -->
+    <rect x="-80" y="60" width="160" height="40" rx="5" fill="#ffcfd2" stroke="#333" stroke-width="1.5" />
+    <text x="0" y="85" font-family="Arial" font-size="14" font-weight="bold" fill="#333" text-anchor="middle">Pain Management</text>
+    
+    <!-- Sleep -->
+    <rect x="-80" y="120" width="160" height="40" rx="5" fill="#ffcfd2" stroke="#333" stroke-width="1.5" />
+    <text x="0" y="145" font-family="Arial" font-size="14" font-weight="bold" fill="#333" text-anchor="middle">Sleep Enhancement</text>
+    
+    <!-- Stress -->
+    <rect x="-80" y="180" width="160" height="40" rx="5" fill="#ffcfd2" stroke="#333" stroke-width="1.5" />
+    <text x="0" y="205" font-family="Arial" font-size="14" font-weight="bold" fill="#333" text-anchor="middle">Stress Reduction</text>
+  </g>
   
-  <!-- Edge AI Processing Box -->
-  <rect x="400" y="170" width="150" height="100" rx="10" ry="10" fill="#3498db" filter="url(#dropShadow)"/>
-  <text x="425" y="210" font-family="Arial" font-size="16" font-weight="bold" fill="white">Edge AI</text>
-  <text x="415" y="230" font-family="Arial" font-size="12" fill="white">Signal Processing</text>
-  <text x="415" y="250" font-family="Arial" font-size="12" fill="white">Pattern Recognition</text>
+  <!-- Smart Orb Detail -->
+  <g transform="translate(100, 300)">
+    <!-- Orb Components Title -->
+    <text x="0" y="-50" font-family="Arial" font-size="18" font-weight="bold" fill="#333" text-anchor="middle">Smart Orb Components</text>
+    
+    <!-- Orb Cutaway Visualization -->
+    <circle cx="0" cy="50" r="80" fill="#f0f0f0" stroke="#6264a7" stroke-width="2" />
+    
+    <!-- Internal Components -->
+    <circle cx="0" cy="50" r="60" fill="#e2eafc" stroke="#6264a7" stroke-width="1" />
+    
+    <!-- Edge AI Chip -->
+    <rect x="-25" y="30" width="50" height="20" rx="2" fill="#b7b7a4" stroke="#333" stroke-width="1" />
+    <text x="0" y="44" font-family="Arial" font-size="10" fill="#fff" text-anchor="middle">AI Chip</text>
+    
+    <!-- Battery -->
+    <rect x="-20" y="60" width="40" height="15" rx="2" fill="#a5a58d" stroke="#333" stroke-width="1" />
+    <text x="0" y="71" font-family="Arial" font-size="9" fill="#fff" text-anchor="middle">Battery</text>
+    
+    <!-- Sensors Layer -->
+    <circle cx="0" cy="50" r="70" fill="none" stroke="#6264a7" stroke-width="1" stroke-dasharray="3,3" />
+    
+    <!-- LED -->
+    <circle cx="0" cy="-20" r="8" fill="#ff7096" stroke="#333" stroke-width="1" />
+    <text x="0" y="-18" font-family="Arial" font-size="9" fill="#fff" text-anchor="middle">LED</text>
+    
+    <!-- Speaker -->
+    <circle cx="30" cy="30" r="8" fill="#83c5be" stroke="#333" stroke-width="1" />
+    <text x="30" y="32" font-family="Arial" font-size="9" fill="#fff" text-anchor="middle">Spk</text>
+    
+    <!-- Vibration Motor -->
+    <circle cx="-30" cy="30" r="8" fill="#006d77" stroke="#333" stroke-width="1" />
+    <text x="-30" y="32" font-family="Arial" font-size="9" fill="#fff" text-anchor="middle">Vib</text>
+    
+    <!-- TENS Electrodes -->
+    <circle cx="0" cy="110" r="8" fill="#4a4e69" stroke="#333" stroke-width="1" />
+    <text x="0" y="112" font-family="Arial" font-size="9" fill="#fff" text-anchor="middle">TENS</text>
+  </g>
   
-  <!-- Stimulation Output Arrow -->
-  <line x1="550" y1="220" x2="620" y2="220" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <!-- Legend -->
+  <g transform="translate(100, 550)">
+    <rect x="0" y="0" width="15" height="15" fill="#ffd7ba" stroke="#333" stroke-width="1" />
+    <text x="25" y="12" font-family="Arial" font-size="12" fill="#333">Sensing Technologies</text>
+    
+    <rect x="200" y="0" width="15" height="15" fill="#d8e2dc" stroke="#333" stroke-width="1" />
+    <text x="225" y="12" font-family="Arial" font-size="12" fill="#333">Stimulation Technologies</text>
+    
+    <rect x="400" y="0" width="15" height="15" fill="#c7ddff" stroke="#333" stroke-width="1" />
+    <text x="425" y="12" font-family="Arial" font-size="12" fill="#333">AI Processing</text>
+    
+    <rect x="600" y="0" width="15" height="15" fill="#ffcfd2" stroke="#333" stroke-width="1" />
+    <text x="625" y="12" font-family="Arial" font-size="12" fill="#333">Health Outcomes</text>
+  </g>
   
-  <!-- Multi-Sensory Stimulation Box -->
-  <rect x="620" y="170" width="150" height="100" rx="10" ry="10" fill="#9b59b6" filter="url(#dropShadow)"/>
-  <text x="650" y="200" font-family="Arial" font-size="16" font-weight="bold" fill="white">Stimulation</text>
-  <text x="640" y="225" font-family="Arial" font-size="12" fill="white">Visual (LED)</text>
-  <text x="640" y="245" font-family="Arial" font-size="12" fill="white">Audio (Speaker)</text>
-  <text x="640" y="265" font-family="Arial" font-size="12" fill="white">Tactile (Vibration)</text>
+  <!-- Data Flow Arrows (Main Flow) -->
+  <path d="M 250,310 Q 350,310 450,290" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrow)" />
+  <path d="M 550,290 Q 650,290 750,310" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrow)" />
   
-  <!-- Feedback Loop -->
-  <path d="M620,300 C500,350 400,350 400,270" fill="none" stroke="#34495e" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
-  <text x="480" y="350" font-family="Arial" font-size="14" fill="#34495e">Feedback Loop</text>
-  
-  <!-- Detailed Features -->
-  <rect x="150" y="380" width="500" height="180" rx="10" ry="10" fill="#ecf0f1" filter="url(#dropShadow)"/>
-  
-  <!-- Feature Icons and Text -->
-  <!-- Electrochemical Impedance Analysis -->
-  <circle cx="200" cy="420" r="20" fill="#e74c3c"/>
-  <text x="180" y="425" font-family="Arial" font-size="12" font-weight="bold" fill="white">ECI</text>
-  <text x="230" y="425" font-family="Arial" font-size="14" fill="#2c3e50">Electrochemical Impedance Analysis</text>
-  
-  <!-- TENS Stimulation -->
-  <circle cx="200" cy="460" r="20" fill="#f39c12"/>
-  <text x="190" y="465" font-family="Arial" font-size="12" font-weight="bold" fill="white">T</text>
-  <text x="230" y="465" font-family="Arial" font-size="14" fill="#2c3e50">Adaptive TENS Stimulation</text>
-  
-  <!-- Multi-Sensory Integration -->
-  <circle cx="200" cy="500" r="20" fill="#2ecc71"/>
-  <text x="190" y="505" font-family="Arial" font-size="12" font-weight="bold" fill="white">M</text>
-  <text x="230" y="505" font-family="Arial" font-size="14" fill="#2c3e50">Multi-Sensory Integration</text>
-  
-  <!-- Wireless Connectivity -->
-  <circle cx="200" cy="540" r="20" fill="#3498db"/>
-  <text x="190" y="545" font-family="Arial" font-size="12" font-weight="bold" fill="white">W</text>
-  <text x="230" y="545" font-family="Arial" font-size="14" fill="#2c3e50">Wireless Connectivity</text>
-  
-  <!-- Application Areas -->
-  <rect x="450" y="420" width="160" height="25" rx="5" ry="5" fill="#16a085"/>
-  <text x="460" y="437" font-family="Arial" font-size="12" fill="white">Exercise Enhancement</text>
-  
-  <rect x="450" y="450" width="160" height="25" rx="5" ry="5" fill="#27ae60"/>
-  <text x="460" y="467" font-family="Arial" font-size="12" fill="white">Pain Management</text>
-  
-  <rect x="450" y="480" width="160" height="25" rx="5" ry="5" fill="#2980b9"/>
-  <text x="460" y="497" font-family="Arial" font-size="12" fill="white">Sleep Enhancement</text>
-  
-  <rect x="450" y="510" width="160" height="25" rx="5" ry="5" fill="#8e44ad"/>
-  <text x="460" y="527" font-family="Arial" font-size="12" fill="white">Stress Reduction</text>
-  
-  <!-- Pulse Ring Animation -->
-  <circle cx="220" cy="200" r="35" stroke="#00c6ff" stroke-width="2" fill="transparent" opacity="0">
-    <animate attributeName="r" values="35;65" dur="2s" repeatCount="indefinite"/>
-    <animate attributeName="opacity" values="0.7;0" dur="2s" repeatCount="indefinite"/>
-  </circle>
-  
-  <!-- Footer Note -->
-  <text x="250" y="580" font-family="Arial" font-size="10" fill="#7f8c8d">© 2024 Ucaretron Inc. - Patent Pending Technology (KR10-2024-0071235)</text>
+  <!-- Arrow Marker -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#333" />
+    </marker>
+  </defs>
 </svg>
