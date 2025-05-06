@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Orb Simulator</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-header {
+            border-radius: 15px 15px 0 0 !important;
+            background-color: #4a6bff;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #4a6bff;
+            border-color: #4a6bff;
+        }
+        .btn-primary:hover {
+            background-color: #3a56d4;
+            border-color: #3a56d4;
+        }
+        .btn-outline-primary {
+            color: #4a6bff;
+            border-color: #4a6bff;
+        }
+        .btn-outline-primary:hover {
+            background-color: #4a6bff;
+            color: white;
+        }
+        .orb-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .status-running {
+            background-color: #28a745;
+        }
+        .status-stopped {
+            background-color: #dc3545;
+        }
+        .status-completed {
+            background-color: #17a2b8;
+        }
+        .chart-container {
+            height: 300px;
+            width: 100%;
+        }
+        .phase-indicator {
+            padding: 5px 10px;
+            border-radius: 15px;
+            display: inline-block;
+            margin-right: 10px;
+            color: white;
+            font-weight: bold;
+        }
+        .phase-SETUP {
+            background-color: #6c757d;
+        }
+        .phase-WARMUP {
+            background-color: #ffc107;
+            color: black;
+        }
+        .phase-MAIN {
+            background-color: #28a745;
+        }
+        .phase-COOLDOWN {
+            background-color: #17a2b8;
+        }
+        .phase-RECOVERY {
+            background-color: #6f42c1;
+        }
+        .smart-orb {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ffffff, #4a6bff);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 
+                        inset 0 5px 10px rgba(255, 255, 255, 0.5),
+                        inset 0 -5px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            animation: pulse 3s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 
+                            inset 0 5px 10px rgba(255, 255, 255, 0.5),
+                            inset 0 -5px 10px rgba(0, 0, 0, 0.3);
+            }
+            50% {
+                box-shadow: 0 15px 25px rgba(74, 107, 255, 0.4), 
+                            inset 0 8px 15px rgba(255, 255, 255, 0.6),
+                            inset 0 -8px 15px rgba(0, 0, 0, 0.4);
+            }
+            100% {
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 
+                            inset 0 5px 10px rgba(255, 255, 255, 0.5),
+                            inset 0 -5px 10px rgba(0, 0, 0, 0.3);
+            }
+        }
+        .smart-orb.pulse-high {
+            animation: pulse-high 1s infinite ease-in-out;
+        }
+        @keyframes pulse-high {
+            0% {
+                background: radial-gradient(circle at 30% 30%, #ffffff, #4a6bff);
+            }
+            50% {
+                background: radial-gradient(circle at 30% 30%, #ffffff, #ff4a6b);
+            }
+            100% {
+                background: radial-gradient(circle at 30% 30%, #ffffff, #4a6bff);
+            }
+        }
+        .orb-data {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .data-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4a6bff;
+        }
+        .data-label {
+            font-size: 14px;
+            color: #6c757d;
+        }
+        .data-unit {
+            font-size: 12px;
+            color: #6c757d;
+        }
+        .sensor-data-card {
+            transition: all 0.3s;
+        }
+        #controlPanel.card {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12 mb-4">
+                <h1 class="text-center">Smart Orb Simulator</h1>
+                <p class="text-center text-muted">Experience the Smart Orb's multi-sensory neurostimulation capabilities through this interactive simulation</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Control Panel -->
+            <div class="col-lg-3">
+                <div id="controlPanel" class="card mb-4">
+                    <div class="card-header">
+                        Simulation Controls
+                    </div>
+                    <div class="card-body">
+                        <form id="simulationForm">
+                            <div class="mb-3">
+                                <label for="profileSelect" class="form-label">User Profile</label>
+                                <select class="form-select" id="profileSelect">
+                                    {% for profile in profiles %}
+                                    <option value="{{ profile.id }}">{{ profile.name }} ({{ profile.age }} years)</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exerciseSelect" class="form-label">Exercise Type</label>
+                                <select class="form-select" id="exerciseSelect">
+                                    {% for type in exercise_types %}
+                                    <option value="{{ type.id }}">{{ type.name }} ({{ type.category }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="intensitySelect" class="form-label">Intensity</label>
+                                <select class="form-select" id="intensitySelect">
+                                    {% for intensity in intensities %}
+                                    <option value="{{ intensity.id }}">{{ intensity.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="durationRange" class="form-label">Duration (seconds)</label>
+                                <input type="range" class="form-range" min="30" max="300" step="30" value="120" id="durationRange">
+                                <div class="text-center" id="durationValue">120 seconds</div>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="button" class="btn btn-primary" id="startButton">Start Simulation</button>
+                                <button type="button" class="btn btn-danger" id="stopButton" disabled>Stop Simulation</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Active Session
+                    </div>
+                    <div class="card-body text-center">
+                        <div id="sessionInfo">
+                            <div class="text-muted">No active session</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        Smart Orb Device
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="orb-container">
+                            <div class="smart-orb" id="orbVisual"></div>
+                        </div>
+                        <div class="row orb-data">
+                            <div class="col-6 mb-3">
+                                <div class="data-value" id="heartRateValue">--</div>
+                                <div class="data-label">Heart Rate <span class="data-unit">BPM</span></div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="data-value" id="emgValue">--</div>
+                                <div class="data-label">EMG Activity <span class="data-unit">AU</span></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="data-value" id="tensIntensityValue">--</div>
+                                <div class="data-label">TENS Intensity <span class="data-unit">mA</span></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="data-value" id="tensFrequencyValue">--</div>
+                                <div class="data-label">TENS Frequency <span class="data-unit">Hz</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart Panel -->
+            <div class="col-lg-9">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Exercise Session</span>
+                        <div id="phaseIndicator" class="d-none">
+                            <span class="phase-indicator" id="currentPhase">SETUP</span>
+                            <span id="timeDisplay">00:00 / 02:00</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="chart-container">
+                                    <div id="heartRateChart"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="chart-container">
+                                    <div id="emgChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="chart-container">
+                                    <div id="accelChart"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="chart-container">
+                                    <div id="tensChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="sessionSummary" style="display: none;">
+                    <div class="card-header">
+                        Session Summary
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Exercise Session Results</h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card sensor-data-card">
+                                    <div class="card-body text-center">
+                                        <h1 class="display-4" id="avgHeartRate">--</h1>
+                                        <p class="card-text">Average Heart Rate (BPM)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card sensor-data-card">
+                                    <div class="card-body text-center">
+                                        <h1 class="display-4" id="maxHeartRate">--</h1>
+                                        <p class="card-text">Maximum Heart Rate (BPM)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card sensor-data-card">
+                                    <div class="card-body text-center">
+                                        <h1 class="display-4" id="totalReps">--</h1>
+                                        <p class="card-text">Total Repetitions</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 class="mt-4">Phase Durations</h5>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div id="phaseDurations"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h5 class="mt-4">Performance Assessment</h5>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p id="performanceText">Once you complete a session, a performance assessment will be displayed here.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Global variables
+        let activeSessionId = null;
+        let statusInterval = null;
+        let phaseStartTimes = {};
+
+        // Update duration display when slider changes
+        $('#durationRange').on('input', function() {
+            $('#durationValue').text($(this).val() + ' seconds');
+        });
+
+        // Start button click handler
+        $('#startButton').click(function() {
+            const profile = $('#profileSelect').val();
+            const exerciseType = $('#exerciseSelect').val();
+            const intensity = $('#intensitySelect').val();
+            const duration = parseInt($('#durationRange').val());
+
+            // Clear previous charts
+            $('#heartRateChart').empty();
+            $('#emgChart').empty();
+            $('#accelChart').empty();
+            $('#tensChart').empty();
+
+            // Hide session summary
+            $('#sessionSummary').hide();
+
+            // Disable start button and enable stop button
+            $('#startButton').prop('disabled', true);
+            $('#stopButton').prop('disabled', false);
+
+            // Start new simulation
+            $.ajax({
+                url: '/start_simulation',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    profile: profile,
+                    exercise_type: exerciseType,
+                    intensity: intensity,
+                    duration: duration
+                }),
+                success: function(response) {
+                    console.log('Simulation started:', response);
+                    activeSessionId = response.session_id;
+                    
+                    // Show phase indicator
+                    $('#phaseIndicator').removeClass('d-none');
+                    
+                    // Start status update interval
+                    clearInterval(statusInterval);
+                    statusInterval = setInterval(updateSessionStatus, 500);
+                    
+                    // Update session info
+                    updateSessionInfo(exerciseType, intensity, duration);
+                    
+                    // Make the orb pulse
+                    $('#orbVisual').addClass('pulse-high');
+                },
+                error: function(error) {
+                    console.error('Error starting simulation:', error);
+                    $('#startButton').prop('disabled', false);
+                    $('#stopButton').prop('disabled', true);
+                    alert('Error starting simulation: ' + error.responseJSON?.error || 'Unknown error');
+                }
+            });
+        });
+
+        // Stop button click handler
+        $('#stopButton').click(function() {
+            if (!activeSessionId) return;
+            
+            $.ajax({
+                url: `/stop_simulation/${activeSessionId}`,
+                type: 'POST',
+                success: function(response) {
+                    console.log('Simulation stopped:', response);
+                    $('#startButton').prop('disabled', false);
+                    $('#stopButton').prop('disabled', true);
+                    
+                    // Stop the orb pulsing
+                    $('#orbVisual').removeClass('pulse-high');
+                },
+                error: function(error) {
+                    console.error('Error stopping simulation:', error);
+                    alert('Error stopping simulation: ' + error.responseJSON?.error || 'Unknown error');
+                }
+            });
+        });
+
+        // Update session information display
+        function updateSessionInfo(exerciseType, intensity, duration) {
+            const exerciseName = $('#exerciseSelect option:selected').text();
+            const intensityName = $('#intensitySelect option:selected').text();
+            
+            let html = `
+                <div>
+                    <div><strong>Exercise:</strong> ${exerciseName}</div>
+                    <div><strong>Intensity:</strong> ${intensityName}</div>
+                    <div><strong>Duration:</strong> ${duration} seconds</div>
+                    <div class="mt-2">
+                        <span class="status-indicator status-running"></span>
+                        <span class="text-success">Running</span>
+                    </div>
+                </div>
+            `;
+            
+            $('#sessionInfo').html(html);
+        }
+
+        // Update session status and charts
+        function updateSessionStatus() {
+            if (!activeSessionId) return;
+            
+            $.ajax({
+                url: `/session_status/${activeSessionId}`,
+                type: 'GET',
+                success: function(response) {
+                    // Update time display
+                    const elapsed = response.status.elapsed_time;
+                    const total = response.status.total_duration;
+                    const elapsedMin = Math.floor(elapsed / 60);
+                    const elapsedSec = Math.floor(elapsed % 60);
+                    const totalMin = Math.floor(total / 60);
+                    const totalSec = Math.floor(total % 60);
+                    
+                    $('#timeDisplay').text(
+                        `${elapsedMin.toString().padStart(2, '0')}:${elapsedSec.toString().padStart(2, '0')} / ` +
+                        `${totalMin.toString().padStart(2, '0')}:${totalSec.toString().padStart(2, '0')}`
+                    );
+                    
+                    // Update phase indicator
+                    const currentPhase = response.status.current_phase;
+                    $('#currentPhase').removeClass().addClass(`phase-indicator phase-${currentPhase}`).text(currentPhase);
+                    
+                    // Update real-time data values
+                    $('#heartRateValue').text(Math.round(response.status.heart_rate || 0));
+                    $('#emgValue').text(Math.round(response.status.emg || 0));
+                    $('#tensIntensityValue').text(response.status.tens_intensity?.toFixed(1) || '--');
+                    $('#tensFrequencyValue').text(response.status.tens_frequency?.toFixed(0) || '--');
+                    
+                    // Update charts
+                    if (response.charts && response.charts.heart_rate_chart) {
+                        Plotly.newPlot('heartRateChart', JSON.parse(response.charts.heart_rate_chart));
+                        Plotly.newPlot('emgChart', JSON.parse(response.charts.emg_chart));
+                        Plotly.newPlot('accelChart', JSON.parse(response.charts.accel_chart));
+                        Plotly.newPlot('tensChart', JSON.parse(response.charts.tens_chart));
+                        
+                        // Store phase start times
+                        if (response.charts.phases) {
+                            phaseStartTimes = {
+                                names: response.charts.phases.names,
+                                times: response.charts.phases.times
+                            };
+                        }
+                    }
+                    
+                    // Check if session is completed
+                    if (response.status.completed || !response.status.running) {
+                        clearInterval(statusInterval);
+                        $('#startButton').prop('disabled', false);
+                        $('#stopButton').prop('disabled', true);
+                        $('#orbVisual').removeClass('pulse-high');
+                        
+                        // Update status indicator
+                        $('#sessionInfo').find('.status-indicator').removeClass('status-running').addClass('status-completed');
+                        $('#sessionInfo').find('.text-success').removeClass('text-success').addClass('text-info').text('Completed');
+                        
+                        // Display session summary
+                        displaySessionSummary(response.summary);
+                    }
+                },
+                error: function(error) {
+                    console.error('Error updating session status:', error);
+                    clearInterval(statusInterval);
+                    $('#startButton').prop('disabled', false);
+                    $('#stopButton').prop('disabled', true);
+                }
+            });
+        }
+
+        // Display session summary
+        function displaySessionSummary(summary) {
+            if (!summary) return;
+            
+            // Show the summary section
+            $('#sessionSummary').show();
+            
+            // Update metrics
+            const metrics = summary.metrics || {};
+            $('#avgHeartRate').text(metrics.average_heart_rate?.toFixed(0) || '--');
+            $('#maxHeartRate').text(metrics.max_heart_rate?.toFixed(0) || '--');
+            $('#totalReps').text(metrics.total_reps || '--');
+            
+            // Phase durations
+            const phaseDurations = metrics.phase_durations || {};
+            let durationsHtml = '<ul class="list-group">';
+            for (const [phase, duration] of Object.entries(phaseDurations)) {
+                const durationMin = Math.floor(duration / 60);
+                const durationSec = Math.floor(duration % 60);
+                durationsHtml += `
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="phase-indicator phase-${phase}" style="width: auto; height: auto;">${phase}</span>
+                        <span>${durationMin}:${durationSec.toString().padStart(2, '0')}</span>
+                    </li>
+                `;
+            }
+            durationsHtml += '</ul>';
+            $('#phaseDurations').html(durationsHtml);
+            
+            // Performance assessment
+            const exerciseType = $('#exerciseSelect').val();
+            const intensity = $('#intensitySelect').val();
+            const avgHR = metrics.average_heart_rate;
+            
+            let performanceText = '';
+            if (avgHR) {
+                const maxHR = metrics.max_heart_rate;
+                const hrReserve = maxHR - metrics.min_heart_rate;
+                
+                // Simple performance assessment based on heart rate and exercise type
+                if (exerciseType.includes('squat') || exerciseType.includes('deadlift')) {
+                    performanceText = `Your strength training session achieved a peak heart rate of ${maxHR?.toFixed(0)} BPM and maintained an average of ${avgHR?.toFixed(0)} BPM. `;
+                    
+                    if (metrics.total_reps) {
+                        performanceText += `You completed ${metrics.total_reps} repetitions `;
+                        if (metrics.rep_rate) {
+                            performanceText += `at an average rate of ${metrics.rep_rate.toFixed(1)} reps per minute. `;
+                        } else {
+                            performanceText += `. `;
+                        }
+                    }
+                    
+                    if (intensity === 'high' || intensity === 'very_high') {
+                        performanceText += `Your high-intensity approach resulted in effective muscle stimulation, as shown by the EMG readings of ${metrics.peak_muscle_activation?.toFixed(0)} units at peak activity.`;
+                    } else {
+                        performanceText += `Your moderate intensity approach maintained consistent muscle engagement, which is ideal for technique development and endurance building.`;
+                    }
+                } else if (exerciseType.includes('run') || exerciseType.includes('cycl')) {
+                    performanceText = `Your endurance training maintained an average heart rate of ${avgHR?.toFixed(0)} BPM (${((avgHR / maxHR) * 100).toFixed(0)}% of your maximum). `;
+                    
+                    if (hrReserve > 50) {
+                        performanceText += `The substantial heart rate variability of ${hrReserve.toFixed(0)} BPM suggests an interval-style workout with good recovery periods. `;
+                    } else {
+                        performanceText += `Your steady heart rate indicates consistent effort throughout the session. `;
+                    }
+                    
+                    if (intensity === 'high' || intensity === 'very_high') {
+                        performanceText += `This high-intensity endurance session would contribute effectively to VO2 max improvement and anaerobic threshold development.`;
+                    } else {
+                        performanceText += `This moderate intensity endurance session is ideal for building aerobic capacity and fat metabolism.`;
+                    }
+                } else if (exerciseType.includes('burp') || exerciseType.includes('jump')) {
+                    performanceText = `Your HIIT workout reached a maximum heart rate of ${maxHR?.toFixed(0)} BPM with rapid intervals evident in the data. `;
+                    performanceText += `The Smart Orb's TENS stimulation was automatically optimized to complement the ${intensity} intensity work/rest cycles, enhancing muscle recruitment during peak effort phases.`;
+                }
+            } else {
+                performanceText = 'Insufficient data to provide a detailed performance assessment.';
+            }
+            
+            $('#performanceText').text(performanceText);
+        }
+    </script>
+</body>
+</html>
