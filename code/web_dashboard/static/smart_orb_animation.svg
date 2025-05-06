@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 300" width="500" height="300">
+  <defs>
+    <!-- Gradients -->
+    <radialGradient id="orbGradient" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
+      <stop offset="0%" style="stop-color:#ffffff" />
+      <stop offset="100%" style="stop-color:#4a6bff">
+        <animate attributeName="stop-color" values="#4a6bff;#ff4a6b;#6bff4a;#4a6bff" dur="10s" repeatCount="indefinite" />
+      </stop>
+    </radialGradient>
+    
+    <radialGradient id="glowGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" style="stop-color:rgba(255,255,255,0.8)" />
+      <stop offset="100%" style="stop-color:rgba(74,107,255,0)">
+        <animate attributeName="stop-color" values="rgba(74,107,255,0);rgba(255,74,107,0.2);rgba(107,255,74,0.1);rgba(74,107,255,0)" dur="4s" repeatCount="indefinite" />
+      </stop>
+    </radialGradient>
+    
+    <!-- Filters -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    
+    <!-- Clips -->
+    <clipPath id="waveClip">
+      <path d="M0,100 Q25,90 50,100 Q75,110 100,100 Q125,90 150,100 Q175,110 200,100 Q225,90 250,100 Q275,110 300,100 Q325,90 350,100 Q375,110 400,100 Q425,90 450,100 Q475,110 500,100 V150 H0 Z">
+        <animate attributeName="d" 
+                 values="M0,100 Q25,90 50,100 Q75,110 100,100 Q125,90 150,100 Q175,110 200,100 Q225,90 250,100 Q275,110 300,100 Q325,90 350,100 Q375,110 400,100 Q425,90 450,100 Q475,110 500,100 V150 H0 Z;
+                        M0,100 Q25,110 50,100 Q75,90 100,100 Q125,110 150,100 Q175,90 200,100 Q225,110 250,100 Q275,90 300,100 Q325,110 350,100 Q375,90 400,100 Q425,110 450,100 Q475,90 500,100 V150 H0 Z;
+                        M0,100 Q25,90 50,100 Q75,110 100,100 Q125,90 150,100 Q175,110 200,100 Q225,90 250,100 Q275,110 300,100 Q325,90 350,100 Q375,110 400,100 Q425,90 450,100 Q475,110 500,100 V150 H0 Z"
+                 dur="6s" 
+                 repeatCount="indefinite" />
+      </path>
+    </clipPath>
+  </defs>
+  
+  <!-- Background -->
+  <rect x="0" y="0" width="500" height="300" fill="#f8f9fa" />
+  
+  <!-- Signals/Waves in Background -->
+  <g opacity="0.2">
+    <!-- Heart Rate Wave -->
+    <path d="M0,200 L40,200 L50,160 L60,240 L70,200 L110,200 L120,160 L130,240 L140,200 L180,200 L190,160 L200,240 L210,200 L250,200 L260,160 L270,240 L280,200 L320,200 L330,160 L340,240 L350,200 L390,200 L400,160 L410,240 L420,200 L460,200 L470,160 L480,240 L490,200 L500,200" 
+          fill="none" stroke="#e74c3c" stroke-width="2">
+      <animate attributeName="d" 
+               values="M0,200 L40,200 L50,160 L60,240 L70,200 L110,200 L120,160 L130,240 L140,200 L180,200 L190,160 L200,240 L210,200 L250,200 L260,160 L270,240 L280,200 L320,200 L330,160 L340,240 L350,200 L390,200 L400,160 L410,240 L420,200 L460,200 L470,160 L480,240 L490,200 L500,200;
+                      M0,200 L40,200 L50,140 L60,260 L70,200 L110,200 L120,140 L130,260 L140,200 L180,200 L190,140 L200,260 L210,200 L250,200 L260,140 L270,260 L280,200 L320,200 L330,140 L340,260 L350,200 L390,200 L400,140 L410,260 L420,200 L460,200 L470,140 L480,260 L490,200 L500,200;
+                      M0,200 L40,200 L50,160 L60,240 L70,200 L110,200 L120,160 L130,240 L140,200 L180,200 L190,160 L200,240 L210,200 L250,200 L260,160 L270,240 L280,200 L320,200 L330,160 L340,240 L350,200 L390,200 L400,160 L410,240 L420,200 L460,200 L470,160 L480,240 L490,200 L500,200"
+               dur="3s" 
+               repeatCount="indefinite" />
+    </path>
+    
+    <!-- EMG Wave -->
+    <path d="M0,250 L25,250 L30,245 L35,255 L40,250 L45,240 L50,260 L55,245 L60,255 L65,248 L70,252 L75,250 L100,250 L105,245 L110,255 L115,250 L120,240 L125,260 L130,245 L135,255 L140,248 L145,252 L150,250 L175,250 L180,245 L185,255 L190,250 L195,240 L200,260 L205,245 L210,255 L215,248 L220,252 L225,250 L250,250 L255,245 L260,255 L265,250 L270,240 L275,260 L280,245 L285,255 L290,248 L295,252 L300,250 L325,250 L330,245 L335,255 L340,250 L345,240 L350,260 L355,245 L360,255 L365,248 L370,252 L375,250 L400,250 L405,245 L410,255 L415,250 L420,240 L425,260 L430,245 L435,255 L440,248 L445,252 L450,250 L475,250 L480,245 L485,255 L490,250 L495,240 L500,250" 
+          fill="none" stroke="#27ae60" stroke-width="2">
+      <animate attributeName="d" 
+               values="M0,250 L25,250 L30,245 L35,255 L40,250 L45,240 L50,260 L55,245 L60,255 L65,248 L70,252 L75,250 L100,250 L105,245 L110,255 L115,250 L120,240 L125,260 L130,245 L135,255 L140,248 L145,252 L150,250 L175,250 L180,245 L185,255 L190,250 L195,240 L200,260 L205,245 L210,255 L215,248 L220,252 L225,250 L250,250 L255,245 L260,255 L265,250 L270,240 L275,260 L280,245 L285,255 L290,248 L295,252 L300,250 L325,250 L330,245 L335,255 L340,250 L345,240 L350,260 L355,245 L360,255 L365,248 L370,252 L375,250 L400,250 L405,245 L410,255 L415,250 L420,240 L425,260 L430,245 L435,255 L440,248 L445,252 L450,250 L475,250 L480,245 L485,255 L490,250 L495,240 L500,250;
+                      M0,250 L25,250 L30,240 L35,260 L40,250 L45,235 L50,265 L55,240 L60,260 L65,245 L70,255 L75,250 L100,250 L105,240 L110,260 L115,250 L120,235 L125,265 L130,240 L135,260 L140,245 L145,255 L150,250 L175,250 L180,240 L185,260 L190,250 L195,235 L200,265 L205,240 L210,260 L215,245 L220,255 L225,250 L250,250 L255,240 L260,260 L265,250 L270,235 L275,265 L280,240 L285,260 L290,245 L295,255 L300,250 L325,250 L330,240 L335,260 L340,250 L345,235 L350,265 L355,240 L360,260 L365,245 L370,255 L375,250 L400,250 L405,240 L410,260 L415,250 L420,235 L425,265 L430,240 L435,260 L440,245 L445,255 L450,250 L475,250 L480,240 L485,260 L490,250 L495,235 L500,250;
+                      M0,250 L25,250 L30,245 L35,255 L40,250 L45,240 L50,260 L55,245 L60,255 L65,248 L70,252 L75,250 L100,250 L105,245 L110,255 L115,250 L120,240 L125,260 L130,245 L135,255 L140,248 L145,252 L150,250 L175,250 L180,245 L185,255 L190,250 L195,240 L200,260 L205,245 L210,255 L215,248 L220,252 L225,250 L250,250 L255,245 L260,255 L265,250 L270,240 L275,260 L280,245 L285,255 L290,248 L295,252 L300,250 L325,250 L330,245 L335,255 L340,250 L345,240 L350,260 L355,245 L360,255 L365,248 L370,252 L375,250 L400,250 L405,245 L410,255 L415,250 L420,240 L425,260 L430,245 L435,255 L440,248 L445,252 L450,250 L475,250 L480,245 L485,255 L490,250 L495,240 L500,250" 
+               dur="1.5s" 
+               repeatCount="indefinite" />
+    </path>
+  </g>
+  
+  <!-- Smart Orb -->
+  <g transform="translate(250, 150)">
+    <!-- Glow Effect -->
+    <circle cx="0" cy="0" r="100" fill="url(#glowGradient)" filter="url(#glow)">
+      <animate attributeName="r" values="100;110;100" dur="4s" repeatCount="indefinite" />
+    </circle>
+    
+    <!-- Main Orb Body -->
+    <circle cx="0" cy="0" r="80" fill="url(#orbGradient)" filter="url(#glow)">
+      <animate attributeName="r" values="80;83;80" dur="2s" repeatCount="indefinite" />
+    </circle>
+    
+    <!-- Light Reflection -->
+    <ellipse cx="-40" cy="-40" rx="25" ry="25" fill="rgba(255,255,255,0.7)">
+      <animate attributeName="rx" values="25;28;25" dur="3s" repeatCount="indefinite" />
+      <animate attributeName="ry" values="25;22;25" dur="3s" repeatCount="indefinite" />
+    </ellipse>
+    
+    <!-- TENS Stimulation Waves (ripples coming out of orb) -->
+    <g>
+      <circle cx="0" cy="0" r="85" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2">
+        <animate attributeName="r" values="85;150;150" dur="3s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.5;0;0" dur="3s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="0" cy="0" r="85" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2">
+        <animate attributeName="r" values="85;85;150;150" begin="1s" dur="3s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.5;0.5;0;0" begin="1s" dur="3s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="0" cy="0" r="85" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2">
+        <animate attributeName="r" values="85;85;85;150;150" begin="2s" dur="3s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.5;0.5;0.5;0;0" begin="2s" dur="3s" repeatCount="indefinite" />
+      </circle>
+    </g>
+  </g>
+  
+  <!-- Human Hand (simplified) -->
+  <g transform="translate(190, 180)">
+    <!-- Palm -->
+    <path d="M0,70 C10,65 20,60 30,60 C40,60 50,65 60,70 C70,75 75,80 80,90 C85,100 85,110 80,120 C75,130 60,140 40,140 C20,140 5,130 0,120 C-5,110 -5,100 0,90 C5,80 10,75 0,70 Z" 
+          fill="#f5d8c4" stroke="#d0a890" stroke-width="1" />
+    
+    <!-- Thumb -->
+    <path d="M-5,90 C-15,85 -25,75 -30,65 C-35,55 -33,45 -25,40 C-17,35 -10,40 -5,45 C0,50 0,60 0,70 Z" 
+          fill="#f5d8c4" stroke="#d0a890" stroke-width="1" />
+    
+    <!-- Index Finger -->
+    <path d="M30,55 C25,45 25,35 30,25 C35,15 45,10 50,15 C55,20 55,30 50,40 C45,50 40,55 30,55 Z" 
+          fill="#f5d8c4" stroke="#d0a890" stroke-width="1" />
+    
+    <!-- Middle Finger -->
+    <path d="M50,60 C45,50 45,35 50,25 C55,15 65,10 70,15 C75,20 75,35 70,45 C65,55 60,60 50,60 Z" 
+          fill="#f5d8c4" stroke="#d0a890" stroke-width="1" />
+    
+    <!-- Ring Finger -->
+    <path d="M65,65 C60,55 60,45 65,35 C70,25 80,20 85,25 C90,30 90,45 85,55 C80,65 75,70 65,65 Z" 
+          fill="#f5d8c4" stroke="#d0a890" stroke-width="1" />
+    
+    <!-- Pinky Finger -->
+    <path d="M75,75 C70,65 70,55 75,45 C80,35 85,35 90,40 C95,45 95,55 90,65 C85,75 80,80 75,75 Z" 
+          fill="#f5d8c4" stroke="#d0a890" stroke-width="1" />
+  </g>
+  
+  <!-- Multi-sensory Symbols -->
+  <g>
+    <!-- Visual (Light Icon) -->
+    <g transform="translate(370, 60)">
+      <circle cx="0" cy="0" r="15" fill="rgba(255, 215, 0, 0.8)">
+        <animate attributeName="opacity" values="0.8;0.4;0.8" dur="2s" repeatCount="indefinite" />
+      </circle>
+      <g opacity="0.8">
+        <line x1="0" y1="-25" x2="0" y2="-18" stroke="#ffd700" stroke-width="2" />
+        <line x1="0" y1="25" x2="0" y2="18" stroke="#ffd700" stroke-width="2" />
+        <line x1="-25" y1="0" x2="-18" y2="0" stroke="#ffd700" stroke-width="2" />
+        <line x1="25" y1="0" x2="18" y2="0" stroke="#ffd700" stroke-width="2" />
+        <line x1="-18" y1="-18" x2="-13" y2="-13" stroke="#ffd700" stroke-width="2" />
+        <line x1="18" y1="18" x2="13" y2="13" stroke="#ffd700" stroke-width="2" />
+        <line x1="-18" y1="18" x2="-13" y2="13" stroke="#ffd700" stroke-width="2" />
+        <line x1="18" y1="-18" x2="13" y2="-13" stroke="#ffd700" stroke-width="2" />
+      </g>
+    </g>
+    
+    <!-- Audio (Sound Wave Icon) -->
+    <g transform="translate(130, 60)">
+      <path d="M0,0 L-5,5 L-5,-5 Z" fill="#3498db" />
+      <path d="M0,0 L15,15 A20,20 0 0 1 15,-15 Z" fill="none" stroke="#3498db" stroke-width="2">
+        <animate attributeName="opacity" values="1;0.5;1" dur="3s" repeatCount="indefinite" />
+      </path>
+      <path d="M0,0 L25,25 A30,30 0 0 1 25,-25 Z" fill="none" stroke="#3498db" stroke-width="2">
+        <animate attributeName="opacity" values="0.7;0.3;0.7" dur="3s" repeatCount="indefinite" />
+      </path>
+      <path d="M0,0 L35,35 A40,40 0 0 1 35,-35 Z" fill="none" stroke="#3498db" stroke-width="2">
+        <animate attributeName="opacity" values="0.4;0.1;0.4" dur="3s" repeatCount="indefinite" />
+      </path>
+    </g>
+    
+    <!-- TENS (Electricity Symbol) -->
+    <g transform="translate(250, 60)">
+      <path d="M0,-15 L5,0 L-10,0 L-5,15" fill="none" stroke="#9b59b6" stroke-width="3" stroke-linecap="round">
+        <animate attributeName="opacity" values="1;0.4;1" dur="1s" repeatCount="indefinite" />
+      </path>
+      <circle cx="0" cy="0" r="20" fill="none" stroke="#9b59b6" stroke-width="2">
+        <animate attributeName="r" values="20;22;20" dur="2s" repeatCount="indefinite" />
+      </circle>
+    </g>
+  </g>
+  
+  <!-- Data Flow Lines -->
+  <g opacity="0.6">
+    <path d="M220,150 C200,120 150,100 130,60" fill="none" stroke="#3498db" stroke-width="2" stroke-dasharray="5,3">
+      <animate attributeName="stroke-dashoffset" values="0;24" dur="2s" repeatCount="indefinite" />
+    </path>
+    <path d="M280,150 C300,120 350,100 370,60" fill="none" stroke="#ffd700" stroke-width="2" stroke-dasharray="5,3">
+      <animate attributeName="stroke-dashoffset" values="0;24" dur="2s" repeatCount="indefinite" />
+    </path>
+    <path d="M250,90 L250,60" fill="none" stroke="#9b59b6" stroke-width="2" stroke-dasharray="5,3">
+      <animate attributeName="stroke-dashoffset" values="0;16" dur="1s" repeatCount="indefinite" />
+    </path>
+  </g>
+
+  <!-- Labels -->
+  <g font-family="Arial, sans-serif" font-size="14" fill="#333">
+    <text x="250" y="30" text-anchor="middle" font-weight="bold" font-size="18">Smart Orb System</text>
+    <text x="130" y="45" text-anchor="middle" font-size="12">Audio Stimulation</text>
+    <text x="250" y="45" text-anchor="middle" font-size="12">TENS Stimulation</text>
+    <text x="370" y="45" text-anchor="middle" font-size="12">Visual Stimulation</text>
+  </g>
+</svg>
