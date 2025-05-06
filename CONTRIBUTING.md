@@ -123,4 +123,4 @@ By participating in this project, you agree to uphold our [Code of Conduct](CODE
 
 Feel free to contact the project maintainers if you have any questions. We're here to help!
 
-For intellectual property or licensing questions, please contact: licensing@ucaretron.com
+For intellectual property or licensing questions, please contact Ucaretron Inc. directly.
